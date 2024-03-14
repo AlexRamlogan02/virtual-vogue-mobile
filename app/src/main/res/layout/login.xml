@@ -10,7 +10,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/lemands"
-            android:paddingTop="50dp"
+            android:layout_marginTop="50dp"
             android:text="@string/appTitle"
             android:textColor="@color/white"
             android:textSize="60sp"
@@ -45,12 +45,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/username" />
+                android:textSize="17sp"
+                android:textStyle="italic"
+                android:text="@string/username"
+                android:labelFor="@id/usernameInput"
+                />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:id="@+id/usernameInput"
+                android:layout_marginVertical="5dp"
                 android:background="@drawable/edit_text_box"
                 android:hint="@string/username"
                 android:paddingVertical="5dp"
@@ -59,12 +64,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/password" />
+                android:text="@string/password"
+                android:textSize="17sp"
+                android:labelFor="@id/passwordInput"
+                android:textStyle="italic"
+                />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:id="@+id/passwordInput"
+                android:layout_marginVertical="5dp"
                 android:layout_marginStart="0dp"
                 android:background="@drawable/edit_text_box"
                 android:hint="@string/password"
@@ -87,6 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:id="@+id/loginButton"
                 android:backgroundTint="@color/reseda_green"
                 android:text="@string/login"
                 android:textSize="17sp"
@@ -109,6 +120,7 @@
                 android:layout_gravity="center"
                 android:text="@string/sign_up"
                 android:textSize="17sp"
+                android:id="@+id/signUpButton"
                 android:textStyle="italic"
                 android:backgroundTint="@color/reseda_green"
                 android:paddingVertical="1dp"/>

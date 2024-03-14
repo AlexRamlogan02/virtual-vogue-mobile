@@ -40,101 +40,130 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="@font/lemands"
-                    android:text="Sign Up"
+                    android:text="@string/sign_up"
                     android:textColor="@color/black"
-                    android:textSize="40sp" />
+                    android:textSize="40sp"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:text="First Name"
-                    android:textStyle="italic" />
+                    android:labelFor="@id/createFirstNameInput"
+                    android:text="@string/first_name"
+                    android:textStyle="italic"
+                    android:textSize="17sp" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
+                    android:layout_marginVertical="5dp"
                     android:background="@drawable/edit_text_box"
-                    android:hint="First Name"
-                    android:padding="5dp"
-                    android:paddingStart="13dp" />
+                    android:autofillHints="name"
+                    android:inputType="text"
+                    android:hint="@string/first_name"
+                    android:id="@+id/createFirstNameInput"
+                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="10dp"
+                    android:textSize="17sp" />
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:text="Last Name"
-                    android:textStyle="italic" />
+                    android:labelFor="@id/createLastNameInput"
+                    android:text="@string/last_name"
+                    android:textStyle="italic"
+                    android:textSize="17sp" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
+                    android:layout_marginVertical="5dp"
+                    android:inputType="text"
+                    android:autofillHints="name"
                     android:background="@drawable/edit_text_box"
-                    android:hint="Last Name"
-                    android:padding="5dp"
-                    android:paddingStart="13dp" />
+                    android:hint="@string/last_name"
+                    android:id="@+id/createLastNameInput"
+                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="13dp"
+                    android:textSize="17sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:text="Email"
-                    android:textStyle="italic" />
+                    android:labelFor="@id/createEmailInput"
+                    android:text="@string/email"
+                    android:textStyle="italic"
+                    android:textSize="17sp" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
+                    android:layout_marginVertical="5dp"
+                    android:id="@+id/createEmailInput"
                     android:background="@drawable/edit_text_box"
-                    android:hint="Email"
-                    android:padding="5dp"
-                    android:paddingStart="13dp" />
+                    android:hint="@string/email"
+                    android:autofillHints="emailAddress"
+                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="13dp"
+                    android:textSize="17sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:text="Password"
+                    android:text="@string/password"
+                    android:labelFor="@id/createPasswordInput"
+                    android:textSize="17sp"
                     android:textStyle="italic" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
+                    android:layout_marginVertical="5dp"
+                    android:autofillHints="password"
                     android:background="@drawable/edit_text_box"
-                    android:hint="Password"
+                    android:id="@+id/createPasswordInput"
+                    android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:padding="5dp"
-                    android:paddingStart="13dp" />
+                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="13dp"
+                    android:textSize="17sp"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="5dp"
-                    android:text="Confirm Password"
-                    android:textStyle="italic" />
+                    android:text="@string/confirm_password"
+                    android:textStyle="italic"
+                    android:labelFor="@id/confirmPasswordInput"
+                    android:textSize="17sp" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
+                    android:layout_marginVertical="5dp"
+                    android:autofillHints="password"
                     android:background="@drawable/edit_text_box"
-                    android:hint="Confirm Password"
+                    android:hint="@string/confirm_password"
+                    android:id="@+id/confirmPasswordInput"
                     android:inputType="textPassword"
-                    android:padding="5dp"
-                    android:paddingStart="13dp" />
+                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="13dp"
+                    android:textSize="17sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingTop="10dp"
-                    android:text="Test"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:textSize="20dp"
+                    android:id="@+id/signupErrorMessage"
+                    android:textColor="@color/blush"
+                    android:textSize="20sp"
                     android:visibility="gone" />
 
                 <Button
@@ -144,7 +173,7 @@
                     android:layout_marginTop="15dp"
                     android:backgroundTint="@color/reseda_green"
                     android:paddingVertical="1dp"
-                    android:text="Sign Up"
+                    android:text="@string/sign_up"
                     android:textSize="17sp"
                     android:textStyle="italic" />
 
@@ -156,9 +185,9 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/lemands"
                 android:paddingTop="15dp"
-                android:text="Already have an account?"
+                android:text="@string/already_have_an_account"
                 android:textColor="@color/reseda_green"
-                android:textSize="70dp"
+                android:textSize="70sp"
                 android:textAlignment="center"
 
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -170,7 +199,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/reseda_green"
                 android:paddingVertical="1dp"
-                android:text="Login"
+                android:text="@string/login"
                 android:textSize="17sp"
                 android:textStyle="italic"
                 app:layout_constraintLeft_toLeftOf="parent"
