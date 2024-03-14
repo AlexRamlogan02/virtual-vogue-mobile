@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="khaki">#C9B79C</color>
+    <color name="champagne">#F1E0C5</color>
+    <color name = "reseda_green">#71816D</color>
+    <color name="bistre">#342A21</color>
+    <color name="blush">#DA667B</color>
+</resources>
