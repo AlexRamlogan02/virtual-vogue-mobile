@@ -25,7 +25,9 @@
             android:paddingBottom="20sp"
             android:text="@string/login"
             android:textAlignment="center"
-            android:textSize="40sp" />
+            android:textSize="40sp"
+            android:textColor="@color/black"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -82,10 +84,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:id="@+id/loginButton"
-            android:backgroundTint="@color/reseda_green"
             android:text="@string/login"
+            android:backgroundTint="@color/reseda_green"
             android:textSize="17sp"
             android:textStyle="italic"
+            android:textColor="@color/white"
             android:paddingVertical="1dp"
             />
 
@@ -96,18 +99,8 @@
             android:padding="10sp"
             android:textStyle="italic"
             android:text="@string/new_sign_up_here"
+            android:textAlignment="center"
             android:textSize="18sp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/sign_up"
-            android:textSize="17sp"
-            android:id="@+id/signUpButton"
-            android:textStyle="italic"
-            android:backgroundTint="@color/reseda_green"
-            android:paddingVertical="1dp"/>
     </LinearLayout>
 
 </FrameLayout>
