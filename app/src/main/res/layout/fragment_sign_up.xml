@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".signUpFragment">
+    tools:context=".signUpFragment"
+    >
 
         <LinearLayout
             android:id="@+id/SignUpCard"
@@ -85,6 +86,7 @@
             <EditText
                 android:id="@+id/createEmailInput"
                 android:layout_width="match_parent"
+                android:inputType="textEmailAddress"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="5dp"
                 android:autofillHints="emailAddress"
@@ -157,7 +159,9 @@
                 android:paddingVertical="1dp"
                 android:text="@string/sign_up"
                 android:textSize="17sp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:textColor="@color/white"
+                />
 
         </LinearLayout>
 
