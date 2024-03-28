@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navgraph_login"
+    app:startDestination="@id/navigation_login"
+   >
+
+   <fragment
+       android:id="@+id/navigation_login"
+       android:name="com.alexandra.virtual_vogue_mobile.loginFragment"
+       android:label="@string/login"
+       tools:layout="@layout/fragment_login"
+       />
+
+   <fragment
+       android:id="@+id/navigation_signup"
+       android:name="com.alexandra.virtual_vogue_mobile.signUpFragment"
+       android:label="@string/sign_up"
+       tools:layout="@layout/fragment_sign_up"
+       />
+
+</navigation>

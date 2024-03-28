@@ -1,46 +1,36 @@
 package com.alexandra.virtual_vogue_mobile;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoException;
-import com.mongodb.ServerApi;
-import com.mongodb.ServerApiVersion;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.os.Bundle;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
+    String TAG = "mainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String connectionString = "mongodb+srv://VirtualCloset:iaekLLKeJbmrHzts@cluster0.c5a9tds.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-        ServerApi serverApi = ServerApi.builder()
-                .version(ServerApiVersion.V1)
-                .build();
-        MongoClientSettings settings = MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString(connectionString))
-                .serverApi(serverApi)
-                .build();
-        // Create a new client and connect to the server
-        try (MongoClient mongoClient = MongoClients.create(settings)) {
-            try {
-                // Send a ping to confirm a successful connection
-                MongoDatabase database = mongoClient.getDatabase("VirtualCloset");
-                database.runCommand(new Document("ping", 1));
-                System.out.println("Pinged your deployment. You successfully connected to MongoDB!");
-            } catch (MongoException e) {
-                e.printStackTrace();
-            }
+        BottomNavigationView navigationView = findViewById(R.id.nav_view);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().
+                findFragmentById(R.id.nav_host_fragment);
+
+        if (navHostFragment != null) {
+            NavController navController = navHostFragment.getNavController();
+
+            AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.menu_navigation_login, R.id.menu_navigation_signup).build();
+
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(navigationView, navController);
         }
 
-
-        //If the user is logged in, open the main activity
-        //if not logged in, open log in activity
+        Log.d(TAG, "onCreate: NavBar Setup");
     }
 }
