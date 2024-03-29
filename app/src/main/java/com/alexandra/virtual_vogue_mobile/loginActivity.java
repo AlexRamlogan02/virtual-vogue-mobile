@@ -52,6 +52,7 @@ public class loginActivity extends AppCompatActivity {
 
 
         Button buttonLogin = findViewById(R.id.loginButton);
+        Button buttonSignUp = findViewById(R.id.signUpButton);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +67,20 @@ public class loginActivity extends AppCompatActivity {
                 post();
             }
 
+        });
+
+        buttonSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(loginActivity.this, signupActivity.class));
+
+                    }
+                });
+
+            }
         });
     }
 
@@ -111,6 +126,7 @@ public class loginActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
+
                             }
                         });
                     }
