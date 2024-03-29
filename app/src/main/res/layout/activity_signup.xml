@@ -36,6 +36,7 @@
 
 
                 <TextView
+                    android:id="@+id/signUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -165,6 +166,7 @@
                     android:visibility="gone" />
 
                 <Button
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -173,6 +175,7 @@
                     android:paddingVertical="1dp"
                     android:text="@string/sign_up"
                     android:textSize="17sp"
+                    android:id="@+id/register"
                     android:textStyle="italic" />
 
             </LinearLayout>
