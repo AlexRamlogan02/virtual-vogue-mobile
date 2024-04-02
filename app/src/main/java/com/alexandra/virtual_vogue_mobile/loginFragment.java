@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -25,7 +26,8 @@ public class loginFragment extends Fragment {
     Map<String, String> params ;
     OkHttpClient client;
     TextView text;
-    String url;
+    EditText eLogin, ePass;
+    String url, login, password;
     String TAG = "loginFragment";
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -41,6 +43,10 @@ public class loginFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                eLogin = (EditText) parentView.findViewById(R.id.usernameInput);
+                ePass = (EditText) parentView.findViewById(R.id.passwordInput);
+                login = eLogin.toString();
+                password = ePass.toString();
                 text.setText("bruh");
             }
         });
