@@ -2,6 +2,7 @@ package com.alexandra.virtual_vogue_mobile;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +16,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class loginFragment extends Fragment {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -28,6 +38,7 @@ public class loginFragment extends Fragment {
     TextView text;
     EditText eLogin, ePass;
     String url, login, password;
+    JSONObject parameter;
     String TAG = "loginFragment";
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -37,17 +48,21 @@ public class loginFragment extends Fragment {
 
         params = new HashMap<String, String>();
         client = new OkHttpClient();
-        text = parentView.findViewById(R.id.loginText);
+        text = parentView.findViewById(R.id.loginResult);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Login";
         Button button = (Button) parentView.findViewById(R.id.loginButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onButtonClick: Started");
                 eLogin = (EditText) parentView.findViewById(R.id.usernameInput);
                 ePass = (EditText) parentView.findViewById(R.id.passwordInput);
-                login = eLogin.toString();
-                password = ePass.toString();
-                text.setText("bruh");
+                login = eLogin.getText().toString();
+                password = ePass.getText().toString();
+                params.put("login", login);
+                params.put("password", password);
+                parameter = new JSONObject(params);
+                post();
             }
         });
 
@@ -55,39 +70,18 @@ public class loginFragment extends Fragment {
         return parentView;
     }
     private void onButtonClick(View view){
-        Log.d(TAG, "onButtonClick: Started");
+
 
         //send login request!
     }
 
-}
-
-/*
-params = new HashMap<String, String>();
-        client = new OkHttpClient();
-        text = getView().findViewById(R.id.loginText);
-        url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Login";
-        Button buttonLogin = getView().findViewById(R.id.loginButton);
-
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        text.setText("wrong/password");
-        }
-        });
-
-public void post(){
-
-
-
+    public void post(){
         RequestBody body = RequestBody.create(JSON, parameter.toString());
-
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .build();
-
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -106,29 +100,30 @@ public void post(){
 
 
                     if (user.startsWith("-1")){
-                        loginActivity.this.runOnUiThread(new Runnable() {
+
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                text.setText("wrong/password");
+                                text.setVisibility(View.VISIBLE);
+                                text.setText("wrong password");
                             }
                         });
+
                     }
                     else{
-                        loginActivity.this.runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                startActivity(new Intent(loginActivity.this, MainActivity.class));
-
+                                startActivity(new Intent(getActivity(), landingPage.class));
                             }
                         });
                     }
 
                 } catch (JSONException e) {
-
                 }
 
             }
         });
-
     }
- */
+}
+
