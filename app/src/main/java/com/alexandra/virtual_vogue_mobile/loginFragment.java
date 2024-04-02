@@ -61,4 +61,59 @@ public void onClick(View v) {
         }
         });
 
+public void post(){
+
+
+
+        RequestBody body = RequestBody.create(JSON, parameter.toString());
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+
+                    String user = "";
+                    String json = response.body().string();
+                    JSONObject jobj = new JSONObject(json);
+
+                    user = jobj.getString("userId");
+
+
+                    if (user.startsWith("-1")){
+                        loginActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                text.setText("wrong/password");
+                            }
+                        });
+                    }
+                    else{
+                        loginActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(new Intent(loginActivity.this, MainActivity.class));
+
+                            }
+                        });
+                    }
+
+                } catch (JSONException e) {
+
+                }
+
+            }
+        });
+
+    }
  */
