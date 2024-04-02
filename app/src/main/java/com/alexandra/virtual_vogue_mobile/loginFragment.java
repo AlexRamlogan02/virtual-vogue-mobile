@@ -22,7 +22,7 @@ import okhttp3.OkHttpClient;
 
 public class loginFragment extends Fragment {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    Map<String, String> params;
+    Map<String, String> params ;
     OkHttpClient client;
     TextView text;
     String url;
@@ -33,8 +33,17 @@ public class loginFragment extends Fragment {
         Log.d(TAG, "onCreateView: Called");
         View parentView =  inflater.inflate(R.layout.fragment_login, container, false);
 
-        //place listeners on the edit boxes!
-        Button buttonLogin = getView().findViewById(R.id.loginButton);
+        params = new HashMap<String, String>();
+        client = new OkHttpClient();
+        text = parentView.findViewById(R.id.loginText);
+        url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Login";
+        Button button = (Button) parentView.findViewById(R.id.loginButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setText("bruh");
+            }
+        });
 
 
         return parentView;
