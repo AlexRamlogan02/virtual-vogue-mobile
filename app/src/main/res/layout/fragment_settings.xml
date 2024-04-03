@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/champagne"
+    tools:context=".SettingsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/settingsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:fontFamily="@font/lemands"
+            android:gravity="center"
+            android:text="@string/settings"
+            android:textColor="@color/black"
+            android:textSize="70sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="30dp"
+            android:background="@drawable/container_card"
+            android:stretchColumns="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/settingsTitle">
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_margin="15dp"
+                    android:text="@string/first_name"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_margin="15dp"
+                    android:layout_span="2"
+                    android:autofillHints="name"
+                    android:background="@drawable/edit_text_box"
+                    android:hint="@string/first_name"
+                    android:inputType="text"
+                    android:paddingHorizontal="25dp"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+/>
+
+
+                <TextView
+                    android:id="@+id/firstNameDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_margin="15dp"
+                    android:contextClickable="true"
+                    android:text="@string/first_name"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:visibility="gone"
+                    />
+            </TableRow>
+
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_margin="15dp"
+                    android:text="@string/last_name"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_margin="15dp"
+                    android:layout_span="2"
+                    android:autofillHints="name"
+                    android:background="@drawable/edit_text_box"
+                    android:hint="@string/last_name"
+                    android:inputType="text"
+                    android:paddingHorizontal="25dp"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+
+                <TextView
+                    android:id="@+id/lastNameDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_margin="15dp"
+                    android:contextClickable="true"
+                    android:text="@string/last_name"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:visibility="gone"
+                    />
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_span="1"
+                    android:layout_margin="15dp"
+                    android:text="@string/email"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_margin="15dp"
+                    android:layout_span="2"
+                    android:autofillHints="name"
+                    android:background="@drawable/edit_text_box"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:paddingHorizontal="15dp"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+
+                <TextView
+                    android:id="@+id/emailDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_span="1"
+                    android:layout_margin="15dp"
+                    android:contextClickable="true"
+                    android:text="@string/email"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:visibility="gone"
+                    />
+            </TableRow>
+
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_span="1"
+                    android:layout_margin="15dp"
+                    android:text="@string/password"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_span="2"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/reseda_green"
+                    android:layout_margin="15sp"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="name"
+                        android:background="@drawable/edit_text_box"
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
+                        android:textColor="@color/black"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/passwordDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_span="1"
+                    android:layout_margin="15dp"
+                    android:contextClickable="true"
+                    android:text="@string/email"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:visibility="gone"
+                    />
+            </TableRow>
+
+
+
+
+
+
+
+        </TableLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>
