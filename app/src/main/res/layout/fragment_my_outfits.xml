@@ -1,37 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".myOutfits">
+    android:orientation="vertical"
+    tools:context=".myOutfits"
+    android:background="@color/champagne"
+    >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <TextView
+        android:id="@+id/outfitsTitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lemands"
+        android:gravity="center"
+        android:padding="25sp"
+        android:text="@string/my_outfits"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:textSize="65sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/outfitSearch"
+        app:layout_constraintTop_toBottomOf="@id/outfitsTitle"
+        android:background="@drawable/edit_text_box"
+        android:layout_margin="30dp"
+        android:queryHint="Find Outfit"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addToClosetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:backgroundTint="@color/reseda_green"
+        android:contentDescription="@string/opens_camera"
+        android:src="@drawable/camera"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/myOutfitsScroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/outfitsTitle"
+        android:padding="35dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/imagesLayout"
+            android:background="@drawable/container_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_margin="25dp"
-            android:id="@+id/addToClosetButton"
-            android:backgroundTint="@color/reseda_green"
-            android:src="@drawable/camera"
-            android:padding="5dp"
-            android:contentDescription="@string/opens_camera" />
-
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/myOutfitsScroll"
+            android:gravity="center"
+            android:orientation="vertical"
             >
 
-        </androidx.core.widget.NestedScrollView>
+            <!-- Add outfits here -->
+        </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

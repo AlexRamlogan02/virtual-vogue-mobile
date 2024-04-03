@@ -22,15 +22,6 @@ class SettingsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View parentView =  inflater.inflate(R.layout.fragment_settings, container, false);
-        tv = requireView().findViewById(R.id.firstNameDisplay);
-        tv.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                onFirstNameClicked(v);
-                return false;
-            }
-        });
-
         return parentView;
     }
 
