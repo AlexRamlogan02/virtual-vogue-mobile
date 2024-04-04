@@ -69,12 +69,6 @@ public class loginFragment extends Fragment {
 
         return parentView;
     }
-    private void onButtonClick(View view){
-
-
-        //send login request!
-    }
-
     public void post(){
         RequestBody body = RequestBody.create(JSON, parameter.toString());
         Request request = new Request.Builder()
@@ -126,4 +120,3 @@ public class loginFragment extends Fragment {
         });
     }
 }
-
