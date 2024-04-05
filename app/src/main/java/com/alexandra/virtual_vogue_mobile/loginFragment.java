@@ -111,15 +111,13 @@ public class loginFragment extends Fragment {
 
                     }
                     else{
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                startActivity(new Intent(getActivity(), landingPage.class));
-                            }
-                        });
+                        startActivity(new Intent(getActivity(), landingPage.class));
                     }
 
                 } catch (JSONException e) {
+                    Log.e(TAG, "onResponse: Error", e);
+                    System.exit(1); //exit system on failure
+                    //could run a toast but i dont wanna
                 }
 
             }
