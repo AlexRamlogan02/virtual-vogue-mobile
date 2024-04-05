@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/landing_navgraph"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/navigation_myoutfits"
+    >
+    <fragment
+        android:id="@+id/navigation_myoutfits"
+        android:name="com.alexandra.virtual_vogue_mobile.myOutfits"
+        android:label="@string/my_outfits"
+        tools:layout="@layout/fragment_my_outfits"
+        />
+
+    <fragment
+        android:id="@+id/navigation_createOutfit"
+        android:name="com.alexandra.virtual_vogue_mobile.outfitCreationFragment"
+        android:label="@string/create_outfit"
+        tools:layout="@layout/fragment_outfit_creation"
+        />
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_landing_settings"
+        android:name="com.alexandra.virtual_vogue_mobile.landingSettingsFragment"
+        />
+
+</navigation>
