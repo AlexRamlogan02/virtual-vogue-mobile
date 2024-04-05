@@ -22,6 +22,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,10 +38,11 @@ public class signUpFragment extends Fragment {
     Map<String, String> params;
     OkHttpClient client;
     TextView text;
-    EditText fname, lname, email, password, login;
-    String fnameS, lnameS, emailS, passwordS, loginS, url;
+    EditText fname, lname, email, password, login, matchPass;
+    String fnameS, lnameS, emailS, passwordS, loginS, matchS, url;
     JSONObject parameter;
     String TAG = "signupFragment";
+    boolean signUpError;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -49,23 +52,33 @@ public class signUpFragment extends Fragment {
         params = new HashMap<String, String>();
         client = new OkHttpClient();
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Register";
+        text = parentView.findViewById(R.id.signupErrorMessage);
         Button button = (Button) parentView.findViewById(R.id.registerButton);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                signUpError = false;
+                text.setVisibility(View.INVISIBLE);
+
+                String regex = "^([_a-zA-Z0-9-]+(\\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*(\\.[a-zA-Z]{1,6}))?$";
+                Pattern pattern = Pattern.compile(regex);
+
                 fname = (EditText) parentView.findViewById(R.id.createFirstNameInput);
                 lname = (EditText) parentView.findViewById(R.id.createLastNameInput);
                 email = (EditText) parentView.findViewById(R.id.createEmailInput);
                 password = (EditText) parentView.findViewById(R.id.createPasswordInput);
                 login = (EditText) parentView.findViewById(R.id.createUsernameInput);
+                matchPass = (EditText) parentView.findViewById(R.id.confirmPasswordInput);
 
                 fnameS = fname.getText().toString();
                 lnameS = lname.getText().toString();
                 emailS = email.getText().toString();
                 passwordS = password.getText().toString();
+                matchS = matchPass.getText().toString();
                 loginS = login.getText().toString();
 
+                Matcher matcher = pattern.matcher(emailS);
 
                 params.put("login", loginS);
                 params.put("password", passwordS);
@@ -74,7 +87,36 @@ public class signUpFragment extends Fragment {
                 params.put("email", emailS);
 
                 parameter = new JSONObject(params);
-                post();
+
+                if (fnameS.isEmpty()) {
+                    signUpError = true;
+                    text.setText("First Name required");
+                    text.setVisibility(View.VISIBLE);
+                } else if (lnameS.isEmpty()) {
+                    signUpError = true;
+                    text.setText("Last Name required");
+                    text.setVisibility(View.VISIBLE);
+                } else if (!matcher.matches() || emailS.isEmpty()) {
+                    signUpError = true;
+                    text.setText("Invalid Email");
+                    text.setVisibility(View.VISIBLE);
+                } else if (loginS.isEmpty()) {
+                    signUpError = true;
+                    text.setText("Username required");
+                    text.setVisibility(View.VISIBLE);
+                } else if (passwordS.isEmpty()) {
+                    signUpError = true;
+                    text.setText("Password must be 8 characters long, one upper and lower case letter, and a special symbol");
+                    text.setVisibility(View.VISIBLE);
+                } else if (!passwordS.matches(matchS)) {
+                    signUpError = true;
+                    text.setText("Passwords don't match");
+                    text.setVisibility(View.VISIBLE);
+                }
+
+                if (!signUpError) {
+                    post();
+                }
 
             }
         });
