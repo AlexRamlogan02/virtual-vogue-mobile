@@ -33,7 +33,7 @@ import okhttp3.Response;
 
 public class loginFragment extends Fragment {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    Map<String, String> params ;
+    Map<String, String> params;
     OkHttpClient client;
     TextView text;
     EditText eLogin, ePass;
