@@ -33,7 +33,7 @@ import okhttp3.Response;
 
 public class loginFragment extends Fragment {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    Map<String, String> params ;
+    Map<String, String> params;
     OkHttpClient client;
     TextView text;
     EditText eLogin, ePass;
@@ -69,12 +69,6 @@ public class loginFragment extends Fragment {
 
         return parentView;
     }
-    private void onButtonClick(View view){
-
-
-        //send login request!
-    }
-
     public void post(){
         RequestBody body = RequestBody.create(JSON, parameter.toString());
         Request request = new Request.Builder()
@@ -124,4 +118,3 @@ public class loginFragment extends Fragment {
         });
     }
 }
-
