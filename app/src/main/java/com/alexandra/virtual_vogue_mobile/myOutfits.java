@@ -52,13 +52,13 @@ public class myOutfits extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Log.d(TAG, "onClick: Button Clicked");
-                        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent = new Intent(getActivity(), AddImageActivity.class);
 
                         try {
                             startActivity(intent);
                         }
                         catch(Exception e){
-                            Log.e(TAG, "onClick: Error opening camera", e);
+                            Log.e(TAG, "onClick: Error opening Activity", e);
                         }
                     }
                 }

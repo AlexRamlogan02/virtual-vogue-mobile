@@ -88,8 +88,8 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="300sp"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
                 android:layout_gravity="center"
                 android:layout_margin="40dp"
                 android:background="@drawable/edit_text_box"
@@ -102,23 +102,27 @@
                 android:gravity="center">
 
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
+                    android:id="@+id/takePictureButton"
                     android:background="@color/reseda_green"
                     android:padding="10dp"
-                    android:text="Take Picture"
+                    android:text="@string/take_picture"
                     android:textColor="@color/white" />
 
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
+                    android:id="@+id/OpenLibrary"
                     android:background="@color/reseda_green"
                     android:padding="10dp"
-                    android:text="Add From Library"
+                    android:text="@string/add_from_library"
                     android:textColor="@color/white" />
             </LinearLayout>
 
@@ -126,11 +130,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:id="@+id/submitButton"
                 android:layout_margin="10dp"
                 android:background="@color/reseda_green"
                 android:padding="10dp"
-                android:text="Submit"
-                android:textColor="@color/white"
+                android:text="@string/submit"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:id="@+id/cancelButton"
+                android:background="@color/blush"
+                android:padding="10dp"
+                android:text="@string/go_back"
+                android:textColor="@color/white" />
+
 
         </LinearLayout>
 
