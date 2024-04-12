@@ -6,12 +6,15 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
     String TAG = "mainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

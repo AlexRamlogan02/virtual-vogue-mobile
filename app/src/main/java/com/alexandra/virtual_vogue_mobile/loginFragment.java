@@ -2,7 +2,9 @@ package com.alexandra.virtual_vogue_mobile;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +41,7 @@ public class loginFragment extends Fragment {
     EditText eLogin, ePass;
     String url, login, password;
     JSONObject parameter;
+    SharedPreferences sharedPreferences;
     String TAG = "loginFragment";
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -51,6 +54,8 @@ public class loginFragment extends Fragment {
         text = parentView.findViewById(R.id.loginResult);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Login";
         Button button = (Button) parentView.findViewById(R.id.loginButton);
+
+        sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,6 +110,9 @@ public class loginFragment extends Fragment {
 
                     }
                     else{
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("user", user);
+                        editor.commit();
                         startActivity(new Intent(getActivity(), landingPage.class));
                     }
 
