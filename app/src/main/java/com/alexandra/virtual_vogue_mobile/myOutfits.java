@@ -115,6 +115,8 @@ public class myOutfits extends Fragment {
                     jobj = new JSONObject(json);
                     JSONArray jsonArray = jobj.getJSONArray("outfits");
 
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+                    JSONArray jsonArray1 = jsonArray;
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
