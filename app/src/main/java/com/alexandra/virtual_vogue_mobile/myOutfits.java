@@ -31,16 +31,31 @@ import android.widget.TextView;
 import com.alexandra.virtual_vogue_mobile.databinding.FragmentMyOutfitsBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class myOutfits extends Fragment {
     String TAG = "myOutfits";
+    OkHttpClient client;
     TextView text;
     FloatingActionButton floatingActionButton;
     //camera
     Intent intent;
+    String url;
     SharedPreferences sharedPreferences;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -50,11 +65,14 @@ public class myOutfits extends Fragment {
 
         View parentView =  inflater.inflate(R.layout.fragment_my_outfits, container, false);
 
+        client = new OkHttpClient();
+        text = parentView.findViewById(R.id.outfitsTitle);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        String name = sharedPreferences.getString("user", null);
+        url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
 
 
-
-
+        fetchImages();
         floatingActionButton = parentView.findViewById(R.id.addToClosetButton);
 
         floatingActionButton.setOnClickListener(
@@ -76,6 +94,37 @@ public class myOutfits extends Fragment {
 
 
         return parentView;
+    }
+
+    public void fetchImages(){
+        Request request = new Request.Builder().url(url).get().build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d(TAG, "BRUUUUH");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d(TAG, "BRUUUUH");
+                String json = response.body().string();
+                JSONObject jobj = null;
+
+                try {
+                    jobj = new JSONObject(json);
+                    JSONArray jsonArray = jobj.getJSONArray("outfits");
+
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+            }
+        });
+
+
+
     }
 
 }
