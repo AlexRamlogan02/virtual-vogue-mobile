@@ -1,7 +1,5 @@
 package com.alexandra.virtual_vogue_mobile;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
