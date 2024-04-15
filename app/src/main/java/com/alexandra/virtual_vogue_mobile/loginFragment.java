@@ -111,6 +111,7 @@ public class loginFragment extends Fragment {
                     }
                     else{
                         SharedPreferences.Editor editor = sharedPreferences.edit();
+                        Log.d(TAG, "onResponse: " + user);
                         editor.putString("user", user);
                         editor.commit();
                         startActivity(new Intent(getActivity(), landingPage.class));
