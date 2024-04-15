@@ -29,6 +29,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.alexandra.virtual_vogue_mobile.databinding.FragmentMyOutfitsBinding;
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -57,6 +58,7 @@ public class myOutfits extends Fragment {
     Intent intent;
     String url;
     SharedPreferences sharedPreferences;
+    ImageView imageView;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -71,7 +73,7 @@ public class myOutfits extends Fragment {
         String name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
 
-
+        imageView = parentView.findViewById(R.id.clothes);
         fetchImages();
         floatingActionButton = parentView.findViewById(R.id.addToClosetButton);
 
@@ -117,7 +119,9 @@ public class myOutfits extends Fragment {
 
 
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
-                    JSONObject jsonArray1 = jsonObject;
+                    String clothesUrl = jsonObject.getString("shirtURL");
+
+                    Glide.with(getActivity()).load(clothesUrl).into(imageView);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }

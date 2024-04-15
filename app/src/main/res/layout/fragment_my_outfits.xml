@@ -55,7 +55,13 @@
             android:orientation="vertical"
             >
 
-            <!-- Add outfits here -->
+
+
+            <ImageView
+                android:id="@+id/clothes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
