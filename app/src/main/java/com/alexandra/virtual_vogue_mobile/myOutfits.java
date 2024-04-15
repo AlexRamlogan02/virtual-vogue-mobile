@@ -73,7 +73,7 @@ public class myOutfits extends Fragment {
         String name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
 
-        imageView = parentView.findViewById(R.id.clothes);
+        imageView = parentView.findViewById(R.id.imageView);
         fetchImages();
         floatingActionButton = parentView.findViewById(R.id.addToClosetButton);
 
