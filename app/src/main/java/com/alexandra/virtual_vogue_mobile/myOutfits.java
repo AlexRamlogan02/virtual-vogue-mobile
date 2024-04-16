@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,6 +38,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -73,8 +76,11 @@ public class myOutfits extends Fragment {
         String name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
 
-        imageView = parentView.findViewById(R.id.imageView);
+        imageView = (ImageView) parentView.findViewById(R.id.imageView);
         fetchImages();
+
+
+
         floatingActionButton = parentView.findViewById(R.id.addToClosetButton);
 
         floatingActionButton.setOnClickListener(
@@ -121,7 +127,19 @@ public class myOutfits extends Fragment {
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
                     String clothesUrl = jsonObject.getString("shirtURL");
 
-                    Glide.with(getActivity()).load(clothesUrl).into(imageView);
+                    URL curl = new URL(clothesUrl);
+                    Bitmap bmp = BitmapFactory.decodeStream(curl.openConnection().getInputStream());
+
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageBitmap(bmp);
+                        }
+                    });
+
+
+                    //Glide.with(getActivity()).load(clothesUrl).into(imageView);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
