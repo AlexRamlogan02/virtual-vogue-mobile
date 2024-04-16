@@ -1,6 +1,8 @@
 package com.alexandra.virtual_vogue_mobile;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -36,6 +38,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class landingSettingsFragment extends Fragment {
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    boolean confirmation;
 
     Button makeChangesButton;
     Button saveChangesButton;
@@ -59,11 +64,16 @@ public class landingSettingsFragment extends Fragment {
     String username;
     String password;
     String userID;
+
+    String tempFName = "";
+    String tempLName = "";
+    String tempUser = "";
+    String tempEmail = "";
+    String tempPassword = "";
     String TAG = "settingsFragment";
     String url;
     OkHttpClient client;
     JSONObject parameter;
-
 
 
     @Override
@@ -76,8 +86,7 @@ public class landingSettingsFragment extends Fragment {
             initializeSettings(parentView);
             initializeButtons(parentView);
             initializeEditText(parentView);
-            connectToHTTP();
-        } catch(Exception e){
+        } catch (Exception e) {
             Log.e(TAG, "onCreateView: Error Starting View Information", e);
         }
         return parentView;
@@ -99,12 +108,12 @@ public class landingSettingsFragment extends Fragment {
 
     }
 
-    public void initializeSettings(View parentView){
+    public void initializeSettings(View parentView) {
         defaultSettingsView = parentView.findViewById(R.id.defaultSettingsView);
         editSettingsView = parentView.findViewById(R.id.editSettingsLayout);
 
         //ensure that the correct layout is visible
-        if(defaultSettingsView.getVisibility() == View.GONE){
+        if (defaultSettingsView.getVisibility() == View.GONE) {
             //hide settings
             editSettingsView.setVisibility(View.GONE);
             defaultSettingsView.setVisibility(View.VISIBLE);
@@ -123,12 +132,12 @@ public class landingSettingsFragment extends Fragment {
 
         display = "Last Name: " + lastName;
         lastNameTV.setText(lastName);
-        display = "email: " + email;
+        display = "Email: " + email;
         emailTV.setText(email);
         //disguise the password
         StringBuilder tempPass = new StringBuilder();
         for (int i = 0; i < password.length(); i++) {
-            if(i < password.length() % 2)
+            if (i < password.length() % 2)
                 tempPass.append(password.charAt(i));
             tempPass.append("*");
         }
@@ -140,7 +149,7 @@ public class landingSettingsFragment extends Fragment {
 
     }
 
-    public void initializeButtons(View parentView){
+    public void initializeButtons(View parentView) {
         makeChangesButton = parentView.findViewById(R.id.changeSettingsButton);
         saveChangesButton = parentView.findViewById(R.id.saveChangesButton);
         deleteAccountButton = parentView.findViewById(R.id.deleteAccountButton);
@@ -161,61 +170,75 @@ public class landingSettingsFragment extends Fragment {
                 //call the thing to save changes and reinitialize settings
                 Log.d(TAG, "onClick: saveSettings");
 
+
+                client = new OkHttpClient();
+                url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/UpdateSettings";
+
                 //add information
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("userId", userID);
 
                 //get input
                 Log.d(TAG, "onClick: Get Input");
+                try {
+                    tempFName = firstNameE.getText().toString();
+                    Log.d(TAG, "onClick: " + tempFName);
+                }
+                catch(Exception e){
+                    tempFName = firstName;
+                    Log.e(TAG, "onClick: Empty First Name", e);
+                }
 
-                String tempFName = firstNameE.getText().toString();
-                String tempLName =  lastNameE.getText().toString();
-                String tempUser =  usernameE.getText().toString();
-                String tempEmail =  emailE.getText().toString();
-                String tempPassword = passwordE.getText().toString();
+                try {
+                     tempLName = lastNameE.getText().toString();
+                    Log.d(TAG, "onClick: " + tempLName);
+                }
+                catch(Exception e){
+                    tempLName = lastName;
+                    Log.e(TAG, "onClick: Empty Last Name", e);
+                }
 
+                try {
+                    tempUser = usernameE.getText().toString();
+                    Log.d(TAG, "onClick: " + tempUser);
+                }catch(Exception e){
+                    tempUser = username;
+                    Log.e(TAG, "onClick: Empty username", e);
+                }
 
+                try {
+                    tempEmail = emailE.getText().toString();
+                    Log.d(TAG, "onClick: " + tempEmail);
+                }
+                catch (Exception e){
+                    tempEmail = email;
+                    Log.e(TAG, "onClick: Empty email", e);
+                }
+                try {
+                    tempPassword = String.valueOf(passwordE.getText());
+                    Log.d(TAG, "onClick: " + tempEmail);
+                }
+                catch (Exception e){
+                    tempPassword = password;
+                    Log.e(TAG, "onClick: Empty password", e);
+                }
+
+                Log.d(TAG, "onClick: Add to HashMap");
                 //find the non empty fields
-                if(tempFName.isEmpty())
-                    params.put("firstName", firstName);
-                else {
-                    firstName = tempFName;
-                    params.put("firstName", firstName);
-                }
-                if(tempLName.isEmpty())
-                    params.put("lastName", lastName);
-                else {
-                    lastName = tempLName;
-                    params.put("lastName", tempLName);
-                }
-                if(tempUser.isEmpty())
-                    params.put("login", username);
-                else {
-                    username= tempUser;
-                    params.put("login", tempUser);
-                }
-                if(tempEmail.isEmpty())
-                    params.put("email", email);
-                else {
-                    email = tempEmail;
-                    params.put("email", tempEmail);
-                }
-                if(tempPassword.isEmpty())
-                    params.put("password", password);
-                else {
-                    password = tempPassword;
-                    params.put("password", tempPassword);
-                }
+                params.put("firstName", tempFName);
+                params.put("lastName", tempLName);
+                params.put("login", tempUser);
+                params.put("email", tempEmail);
+                params.put("password", tempPassword);
 
-                Log.d(TAG, "onClick: Get Information: " + firstName + password + email + username + password);
+                Log.d(TAG, "onClick: Get Information: " + params);
                 parameter = new JSONObject(params);
 
                 //post changes
                 Log.d(TAG, "onClick: Start Post");
                 postChanges();
-
-                //reinitialize settings
-                initializeSettings(parentView);
+                Intent intent = new Intent(getActivity(), landingPage.class);
+                startActivity(intent);
             }
         });
 
@@ -224,34 +247,82 @@ public class landingSettingsFragment extends Fragment {
             public void onClick(View v) {
                 //delete the account and start main activity
                 Log.d(TAG, "onClick: Delete Account");
+                client = new OkHttpClient();
+                url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/DeleteUser/" + userID;
+
+                //confirm deletion
+                try {
+                    confirmDelete();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+    public void confirmDelete() throws Exception{
+
+        Log.d(TAG, "confirmDelete: Building Dialog");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Do you want to delete your account?");
+        builder.setTitle("Confirm Account Deletion");
+
+        Log.d(TAG, "confirmDelete: Settings Buttons");
+        //positive button
+        builder.setPositiveButton("Yes, delete my account", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Log.d(TAG, "onClick: Continue Cancellation");
+                //make parameters
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("userId", userID);
+                parameter = new JSONObject(params);
+
+                Log.d(TAG, "onClick: Start Delete");
+                //call delete
+                postDelete();
+                //return to main
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 //make a toast that the account was deleted
                 startActivity(intent);
             }
         });
+
+
+        //negative
+        builder.setNegativeButton("No, keep my account", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                confirmation = false;
+                //cancel
+            }
+        });
+
+        Log.d(TAG, "confirmDelete: Showing Dialog");
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        Log.d(TAG, "confirmDelete: dialog showed");
     }
 
-    public void initializeEditText(View parentView){
+    public void initializeEditText(View parentView) {
         firstNameE = parentView.findViewById(R.id.settingsEditFirstName);
         lastNameE = parentView.findViewById(R.id.settingsLastName);
         usernameE = parentView.findViewById(R.id.settingsEditUsername);
         emailE = parentView.findViewById(R.id.settingsEditEmail);
         passwordE = parentView.findViewById(R.id.settingsEditPassword);
     }
+    public void postChanges() {
 
-    private void connectToHTTP(){
-        client = new OkHttpClient();
-        url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Login";
-    }
-    
-    public void postChanges(){
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), parameter.toString());
+        Log.d(TAG, "postChanges: Begin");
+        RequestBody body = RequestBody.create(JSON, parameter.toString());
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .build();
 
+        Log.d(TAG, "postChanges: Created body and request");
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -264,36 +335,77 @@ public class landingSettingsFragment extends Fragment {
 
                 try {
                     String json = response.body().string();
-                    JSONObject jsonObject  = new JSONObject(json);
-
-                    String error = jsonObject.getString("error");
+                    JSONObject jobj = new JSONObject(json);
+                    //error here?
+                    String error = jobj.getString("error");
                     Log.d(TAG, "onResponse: " + error);
                     //find error
-                    if(!error.isEmpty()){
+                    if (!error.isEmpty()) {
                         //make a toast
-                        Toast toast = Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                    else{
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("firstName", firstName);
-                        editor.putString("lastName", lastName);
-                        editor.putString("email", email);
-                        editor.putString("username", username);
-                        editor.putString("password", password);
-                        editor.commit();
-
-                        Log.d(TAG, "onResponse: Put in sharedPreferences!");
-
+                        Log.d(TAG, "onResponse: Error" + error);
+                        return;
+                    } else {
                         //toast!
-                        Toast toast = Toast.makeText(getActivity(), "User Updated!", Toast.LENGTH_SHORT);
-                        toast.show();
+                        Log.d(TAG, "onResponse: Success");
+                        sharedPreferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        //add values to sharedPreferences
+
+                        editor.putString("firstName", tempFName);
+                        editor.putString("lastName", tempLName);
+                        editor.putString("email", tempEmail);
+                        editor.putString("username", tempUser);
+                        editor.putString("password", tempPassword);
+                        editor.commit();
                     }
-                }
-                catch (JSONException e){
+                } catch (Exception e) {
                     Log.e(TAG, "onResponse: JSONObject failure", e);
                 }
 
+            }
+        });
+
+    }
+
+
+    public void postDelete() {
+
+        Log.d(TAG, "postChanges: Begin");
+        RequestBody body = RequestBody.create(JSON, parameter.toString());
+        Request request = new Request.Builder()
+                .url(url)
+                .delete(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .build();
+
+        Log.d(TAG, "postChanges: Created body and request");
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "onFailure: Failed to post", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+                try {
+                    String json = response.body().string();
+                    JSONObject jobj = new JSONObject(json);
+                    //error here?
+                    String success = jobj.getString("success");
+                    //find error
+                    if (success.equals("false")) {
+                        //make a toast
+                        Log.d(TAG, "onResponse: Error");
+                        return;
+                    } else {
+                        //toast!
+                        Log.d(TAG, "onResponse: Success");
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "onResponse: JSONObject failure", e);
+                }
             }
         });
 
