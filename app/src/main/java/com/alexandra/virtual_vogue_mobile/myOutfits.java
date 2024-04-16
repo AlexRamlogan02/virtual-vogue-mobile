@@ -61,7 +61,7 @@ public class myOutfits extends Fragment {
     Intent intent;
     String url;
     SharedPreferences sharedPreferences;
-    ImageView imageView;
+    ImageView imageView, imageView2;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -77,6 +77,7 @@ public class myOutfits extends Fragment {
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
 
         imageView = (ImageView) parentView.findViewById(R.id.imageView);
+        imageView2 = (ImageView) parentView.findViewById(R.id.imageView2);
         fetchImages();
 
 
@@ -124,17 +125,23 @@ public class myOutfits extends Fragment {
                     JSONArray jsonArray = jobj.getJSONArray("outfits");
 
 
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                    String clothesUrl = jsonObject.getString("shirtURL");
+                    JSONObject outfit = jsonArray.getJSONObject(0);
+                    String clothesUrl = outfit.getString("shirtURL");
+                    String pantsUrl = outfit.getString("pantsURL");
+
+
 
                     URL curl = new URL(clothesUrl);
+                    URL pants = new URL(pantsUrl);
                     Bitmap bmp = BitmapFactory.decodeStream(curl.openConnection().getInputStream());
+                    Bitmap bmp2 = BitmapFactory.decodeStream(pants.openConnection().getInputStream());
 
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             imageView.setImageBitmap(bmp);
+                            imageView2.setImageBitmap(bmp2);
                         }
                     });
 
