@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -43,11 +44,12 @@ public class loginFragment extends Fragment {
     JSONObject parameter;
     SharedPreferences sharedPreferences;
     String TAG = "loginFragment";
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: Called");
-        View parentView =  inflater.inflate(R.layout.fragment_login, container, false);
+        View parentView = inflater.inflate(R.layout.fragment_login, container, false);
 
         params = new HashMap<String, String>();
         client = new OkHttpClient();
@@ -74,7 +76,8 @@ public class loginFragment extends Fragment {
 
         return parentView;
     }
-    public void post(){
+
+    public void post() {
         RequestBody body = RequestBody.create(JSON, parameter.toString());
         Request request = new Request.Builder()
                 .url(url)
@@ -95,10 +98,18 @@ public class loginFragment extends Fragment {
                     String json = response.body().string();
                     JSONObject jobj = new JSONObject(json);
 
+                    Log.d(TAG, "onResponse: json + " + json);
+
                     user = jobj.getString("userId");
+                    String firstName = jobj.getString("firstName");
+                    String lastName = jobj.getString("lastName");
+                    String email = jobj.getString("email");
+                    String verified = jobj.getString("verified");
 
+                    Log.d(TAG, "onResponse: results: " + firstName + "\n" + lastName + "\n"
+                            + email + "\n" + verified);
 
-                    if (user.startsWith("-1")){
+                    if (user.startsWith("-1")) {
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -108,12 +119,21 @@ public class loginFragment extends Fragment {
                             }
                         });
 
-                    }
-                    else{
+                    } else {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         Log.d(TAG, "onResponse: " + user);
+
+                        //add values to sharedPreferences
+
                         editor.putString("user", user);
+                        editor.putString("firstName", firstName);
+                        editor.putString("lastName", lastName);
+                        editor.putString("email", email);
+                        editor.putString("username", login);
+                        editor.putString("password", password);
+                        editor.putString("verified", verified);
                         editor.commit();
+
                         startActivity(new Intent(getActivity(), landingPage.class));
                     }
 

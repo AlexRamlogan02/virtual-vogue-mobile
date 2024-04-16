@@ -26,12 +26,96 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+        <LinearLayout
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/settingsTitle"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/defaultSettingsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="40dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/container_card"
+            android:orientation="vertical"
+            android:padding="30dp"
+            android:paddingBottom="55dp"
+            android:outlineAmbientShadowColor="@color/black"
+            android:elevation="24sp"
+            android:layout_gravity="center"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/first_name"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:id="@+id/settingsFirstName"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/last_name"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:id="@+id/settingsLastName"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:id="@+id/settingsEmail"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:id="@+id/settingsUsername"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/password"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:id="@+id/settingsPassword"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/reseda_green"
+                android:textColor="@color/white"
+                android:id="@+id/changeSettingsButton"
+                android:text="@string/make_changes"
+                android:paddingHorizontal="20dp"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:textStyle="italic"
+                />
+
+
+        </LinearLayout>
+
         <LinearLayout
             app:layout_constraintTop_toBottomOf="@id/settingsTitle"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-
+            android:visibility="visible"
+            android:id="@+id/editSettingsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="40dp"
@@ -55,7 +139,7 @@
                 android:textStyle="italic" />
 
             <EditText
-                android:id="@+id/createFirstNameInput"
+                android:id="@+id/settingsEditFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="5dp"
@@ -78,7 +162,7 @@
                 android:textStyle="italic" />
 
             <EditText
-                android:id="@+id/createLastNameInput"
+                android:id="@+id/settingsEditLastName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="5dp"
@@ -100,7 +184,7 @@
                 android:textStyle="italic" />
 
             <EditText
-                android:id="@+id/createEmailInput"
+                android:id="@+id/settingsEditEmail"
                 android:layout_width="match_parent"
                 android:inputType="textEmailAddress"
                 android:layout_height="match_parent"
@@ -122,7 +206,7 @@
                 android:textStyle="italic" />
 
             <EditText
-                android:id="@+id/createUsernameInput"
+                android:id="@+id/settingsEditUsername"
                 android:layout_width="match_parent"
                 android:inputType="textEmailAddress"
                 android:layout_height="match_parent"
@@ -143,18 +227,27 @@
                 android:textSize="17sp"
                 android:textStyle="italic" />
 
-            <EditText
-                android:id="@+id/createPasswordInput"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="5dp"
-                android:autofillHints="password"
-                android:background="@drawable/edit_text_box"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:paddingHorizontal="13dp"
-                android:paddingVertical="5dp"
-                android:textSize="17sp" />
+                android:layout_height="wrap_content"
+                app:passwordToggleEnabled="true"
+                app:hintAnimationEnabled="false"
+                app:hintEnabled="false"
+                >
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/settingsEditPassword"
+                   android:layout_margin="0dp"
+                   android:hint="@string/password"
+                   android:background="@drawable/edit_text_box"
+                   android:paddingHorizontal="13dp"
+                   android:paddingVertical="5dp"
+                   android:textSize="17sp"
+                   android:inputType="textPassword"
+                   />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:layout_width="wrap_content"
@@ -162,6 +255,7 @@
                 android:background="@color/reseda_green"
                 android:textColor="@color/white"
                 android:text="Save Changes"
+                android:id="@+id/saveChangesButton"
                 android:paddingHorizontal="20dp"
                 android:layout_gravity="center"
                 android:layout_margin="15dp"
@@ -173,6 +267,7 @@
                 android:background="@color/blush"
                 android:textColor="@color/white"
                 android:text="Delete Account"
+                android:id="@+id/deleteAccountButton"
                 android:paddingHorizontal="20dp"
                 android:layout_gravity="center"
                 android:layout_margin="15dp"
