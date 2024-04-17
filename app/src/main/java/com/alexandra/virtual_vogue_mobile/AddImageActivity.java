@@ -51,10 +51,10 @@ public class AddImageActivity extends AppCompatActivity {
             new ActivityResultCallback<Uri>() {
                 @Override
                 public void onActivityResult(Uri o) {
-                    if (o == null){
+                    if (o == null) {
                         //Toast.makeText(AddImageActivity.this, "No Image Selected!", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onActivityResult: No  Image Selected");
-                    }else{
+                    } else {
                         Glide.with(getApplicationContext()).load(o).into(imageView);
                     }
                 }
@@ -135,7 +135,7 @@ public class AddImageActivity extends AppCompatActivity {
         }
 
     }
-}
+
     public void onClothingSelected(View view) {
         selectedClothing = R.string.top;
         if (view.getId() == R.id.shirtButton) {
@@ -146,7 +146,7 @@ public class AddImageActivity extends AppCompatActivity {
             selectedClothing = R.string.dress;
         }
     }
-
-
-
 }
+
+
+

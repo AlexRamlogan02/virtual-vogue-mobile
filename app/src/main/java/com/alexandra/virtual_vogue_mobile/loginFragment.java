@@ -113,26 +113,39 @@ public class loginFragment extends Fragment {
                             @Override
                             public void run() {
                                 text.setVisibility(View.VISIBLE);
-                                text.setText("wrong password");
+                                text.setText("Wrong Username/Password");
                             }
                         });
 
                     } else {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        Log.d(TAG, "onResponse: " + user);
+                        if (verified.matches("false"))
+                        {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    text.setVisibility(View.VISIBLE);
+                                    text.setText("User isn't verified");
+                                }
+                            });
+                        }
+                        else {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            Log.d(TAG, "onResponse: " + user);
 
-                        //add values to sharedPreferences
+                            //add values to sharedPreferences
 
-                        editor.putString("user", user);
-                        editor.putString("firstName", firstName);
-                        editor.putString("lastName", lastName);
-                        editor.putString("email", email);
-                        editor.putString("username", login);
-                        editor.putString("password", password);
-                        editor.putString("verified", verified);
-                        editor.commit();
+                            editor.putString("user", user);
+                            editor.putString("firstName", firstName);
+                            editor.putString("lastName", lastName);
+                            editor.putString("email", email);
+                            editor.putString("username", login);
+                            editor.putString("password", password);
+                            editor.putString("verified", verified);
+                            editor.commit();
 
-                        startActivity(new Intent(getActivity(), landingPage.class));
+                            startActivity(new Intent(getActivity(), landingPage.class));
+                        }
+
                     }
 
                 } catch (JSONException e) {
