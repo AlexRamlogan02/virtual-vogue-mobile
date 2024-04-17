@@ -39,7 +39,7 @@ public class outfitCreationFragment extends Fragment {
         View parentView =  inflater.inflate(R.layout.fragment_outfit_creation, container, false);
 
         client = new OkHttpClient();
-        text = parentView.findViewById(R.id.blank);
+        //text = parentView.findViewById(R.id.blank);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/images/" + name;
@@ -75,7 +75,7 @@ public class outfitCreationFragment extends Fragment {
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         imageObj = jsonArray.getJSONObject(i);
-                        JSONObject object = imageObj;
+
 
                     }
 
