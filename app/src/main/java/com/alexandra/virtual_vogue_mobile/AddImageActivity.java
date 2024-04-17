@@ -20,10 +20,6 @@ public class AddImageActivity extends AppCompatActivity {
     Button mSubmitButton;
     Button mCancelButton;
     RadioGroup mRadioGroup;
-    SharedPreferences sharedPreferences;
-    ImageView imageView;
-    //String name = sharedPreferences.getString("user", null);
-    //String url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Upload/" + name;
     String TAG = "AddImageActivity";
 
     @Override
@@ -31,8 +27,6 @@ public class AddImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_image);
 
-
-        imageView = findViewById(R.id.imageView);
         mOpenLibraryButton = findViewById(R.id.OpenLibrary);
         mOpenCameraButton = findViewById(R.id.takePictureButton);
         mSubmitButton = findViewById(R.id.submitButton);
@@ -53,16 +47,13 @@ public class AddImageActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: open camera");
                 Intent openCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 try {
-                    startActivityForResult(openCamera, 1888);
-                    Bitmap photo = (Bitmap) openCamera.getExtras().get("data");
-                    imageView.setImageBitmap(photo);
-                }
-                catch(Exception e){
+                    startActivity(openCamera);
+                } catch (Exception e) {
                     Log.e(TAG, "onClick: Error Opening Camera", e);
                 }
             }
         });
-        
+
         mOpenLibraryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +61,7 @@ public class AddImageActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: Open Library");
             }
         });
-        
+
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +69,7 @@ public class AddImageActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: Submit Photo");
             }
         });
-        
+
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,5 +78,5 @@ public class AddImageActivity extends AppCompatActivity {
             }
         });
     }
-
 }
+
