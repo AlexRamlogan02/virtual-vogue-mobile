@@ -28,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
             AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                     R.id.navigation_login, R.id.navigation_signup).build();
-
-            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
             NavigationUI.setupWithNavController(navigationView, navController);
         }
 
