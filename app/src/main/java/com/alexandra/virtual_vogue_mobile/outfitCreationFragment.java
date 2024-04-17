@@ -51,7 +51,7 @@ public class outfitCreationFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                
+
             }
 
             @Override
