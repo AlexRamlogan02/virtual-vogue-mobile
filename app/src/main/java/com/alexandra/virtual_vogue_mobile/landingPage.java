@@ -31,7 +31,7 @@ public class landingPage extends AppCompatActivity {
                 AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                         R.id.navigation_myoutfits, R.id.navigation_createOutfit, R.id.navigation_settings).build();
 
-                NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+                //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
                 NavigationUI.setupWithNavController(navigationView, navController);
             }
 
