@@ -3,6 +3,7 @@ package com.alexandra.virtual_vogue_mobile;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -137,46 +139,41 @@ public class signUpFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
+
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                String json = response.body().string();
+
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(new Intent(getActivity(), loginFragment.class));
+                        try {
+                            String json = response.body().string();
+                            JSONObject jobj = new JSONObject(json);
+
+                            String error = jobj.getString("error");
+                            if (error.matches("")) {
+                                text.setText("Verification email has been sent!");
+                                text.setVisibility(View.VISIBLE);
+                                text.setTextColor(getResources().getColor(R.color.reseda_green));
+
+                            } else {
+                                text.setText(error);
+                                text.setVisibility(View.VISIBLE);
+                                text.setTextColor(getResources().getColor(R.color.blush));
+                            }
+                        } catch (JSONException e){
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
+
 
             }
         });
     }
 }
-/*
-    public void post() {
-        RequestBody body = RequestBody.create(JSON, parameter.toString());
-
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .addHeader("content-type", "application/json; charset=utf-8")
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    String json = response.body().string();
-                    //JSONObject jobj = new JSONObject(json);
-                        signupActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                startActivity(new Intent(signupActivity.this, loginActivity.class));
-                            }
-                        });
- */
