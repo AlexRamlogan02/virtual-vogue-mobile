@@ -3,10 +3,14 @@ package com.alexandra.virtual_vogue_mobile;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 public class AddImageActivity extends AppCompatActivity {
@@ -16,14 +20,12 @@ public class AddImageActivity extends AppCompatActivity {
     Button mSubmitButton;
     Button mCancelButton;
     RadioGroup mRadioGroup;
-
     String TAG = "AddImageActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_image);
-
 
         mOpenLibraryButton = findViewById(R.id.OpenLibrary);
         mOpenCameraButton = findViewById(R.id.takePictureButton);
@@ -40,18 +42,18 @@ public class AddImageActivity extends AppCompatActivity {
         mOpenCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //open the camera
                 Log.d(TAG, "onClick: open camera");
-                Intent openCamera = new Intent("android.media.action.IMAGE_CAPTURE");
+                Intent openCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 try {
                     startActivity(openCamera);
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     Log.e(TAG, "onClick: Error Opening Camera", e);
                 }
             }
         });
-        
+
         mOpenLibraryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,7 +61,7 @@ public class AddImageActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: Open Library");
             }
         });
-        
+
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +69,7 @@ public class AddImageActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: Submit Photo");
             }
         });
-        
+
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,5 +78,5 @@ public class AddImageActivity extends AppCompatActivity {
             }
         });
     }
-
 }
+

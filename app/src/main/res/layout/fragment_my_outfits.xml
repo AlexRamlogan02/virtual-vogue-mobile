@@ -41,23 +41,44 @@
         android:id="@+id/myOutfitsScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:padding="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/outfitsTitle"
-        android:padding="35dp"
-        >
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="31dp">
 
         <LinearLayout
             android:id="@+id/imagesLayout"
-            android:background="@drawable/container_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/container_card"
             android:gravity="center"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
-            <!-- Add outfits here -->
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="200dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+
+                android:contentDescription="@string/add_clothing"
+                android:elevation="5dp" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="200dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:contentDescription="@string/add_clothing"
+                android:elevation="5dp"
+                android:paddingBottom="20dp" />
+
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
