@@ -15,6 +15,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Layout;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -75,9 +77,10 @@ public class AddImageActivity extends AppCompatActivity {
         mOpenCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //open the camera
                 Log.d(TAG, "onClick: open camera");
-                Intent openCamera = new Intent("android.media.action.IMAGE_CAPTURE");
+                Intent openCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 try {
                     startActivity(openCamera);
                 } catch (Exception e) {
@@ -132,7 +135,7 @@ public class AddImageActivity extends AppCompatActivity {
         }
 
     }
-
+}
     public void onClothingSelected(View view) {
         selectedClothing = R.string.top;
         if (view.getId() == R.id.shirtButton) {
