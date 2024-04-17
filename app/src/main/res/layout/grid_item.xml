@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="160dp"
         android:layout_height="210dp"
-        android android:scaleType="centerCrop"
+        android:scaleType="centerCrop"
         android:id="@+id/gridImg"/>
 
     <TextView

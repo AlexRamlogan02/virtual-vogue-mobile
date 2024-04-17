@@ -44,7 +44,7 @@ public class outfitCreationFragment extends Fragment {
         View parentView =  inflater.inflate(R.layout.fragment_outfit_creation, container, false);
 
         client = new OkHttpClient();
-        imageView = parentView.findViewById(R.id.imageViews);
+        imageView = parentView.findViewById(R.id.imageViewShirt);
         //text = parentView.findViewById(R.id.blank);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         name = sharedPreferences.getString("user", null);
@@ -88,6 +88,8 @@ public class outfitCreationFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+
+
                                 imageView.setImageBitmap(bitmap);
                             }
                         });
