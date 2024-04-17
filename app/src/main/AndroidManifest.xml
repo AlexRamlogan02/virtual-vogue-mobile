@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.hardware.camera"
-        android:required="true"/>"
+        android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -21,7 +21,7 @@
             android:exported="false" />
         <activity
             android:name=".landingPage"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
