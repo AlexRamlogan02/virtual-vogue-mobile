@@ -128,4 +128,6 @@
     <string name="submit">Submit</string>
     <string name="go_back">Go back</string>
     <string name="make_changes">Make Changes</string>
+    <string name="find_shirts">Find Shirts</string>
+    <string name="the_selected_shirt">The Selected Shirt</string>
 </resources>

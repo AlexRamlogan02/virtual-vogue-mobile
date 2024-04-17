@@ -7,8 +7,6 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.ImageCapture;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -138,7 +136,6 @@ public class AddImageActivity extends AppCompatActivity {
             RadioButton radio = (RadioButton) mRadioGroup.getChildAt(i);
             radio.setOnClickListener(this::onClothingSelected);
         }
-
     }
 
     public void onClothingSelected(View view) {
