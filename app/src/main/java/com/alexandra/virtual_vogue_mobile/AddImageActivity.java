@@ -221,6 +221,7 @@ public class AddImageActivity extends AppCompatActivity {
         }
         Log.d(TAG, "onActivityResult: ");
     }
+}
 
     private boolean canEnable(){
         return(selectedType && imageLoaded);
@@ -256,7 +257,6 @@ public class AddImageActivity extends AppCompatActivity {
                     boolean success = object.getBoolean("success");
 
                     Log.d(TAG, "onResponse: " + String.valueOf(success));
-
                     if(success){
                         Log.d(TAG, "onResponse: Sucessful post");
                         finish();

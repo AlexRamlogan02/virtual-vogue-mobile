@@ -122,29 +122,31 @@ public class myOutfits extends Fragment {
 
                 try {
                     jobj = new JSONObject(json);
-                    JSONArray jsonArray = jobj.getJSONArray("outfits");
+
+                    if (!jobj.getBoolean("success")){
+
+                    }
+                    else {
+                        JSONArray jsonArray = jobj.getJSONArray("outfits");
+                        JSONObject outfit = jsonArray.getJSONObject(0);
+                        String clothesUrl = outfit.getString("shirtURL");
+                        String pantsUrl = outfit.getString("pantsURL");
 
 
-                    JSONObject outfit = jsonArray.getJSONObject(0);
-                    String clothesUrl = outfit.getString("shirtURL");
-                    String pantsUrl = outfit.getString("pantsURL");
+                        URL curl = new URL(clothesUrl);
+                        URL pants = new URL(pantsUrl);
+                        Bitmap bmp = BitmapFactory.decodeStream(curl.openConnection().getInputStream());
+                        Bitmap bmp2 = BitmapFactory.decodeStream(pants.openConnection().getInputStream());
 
 
-
-                    URL curl = new URL(clothesUrl);
-                    URL pants = new URL(pantsUrl);
-                    Bitmap bmp = BitmapFactory.decodeStream(curl.openConnection().getInputStream());
-                    Bitmap bmp2 = BitmapFactory.decodeStream(pants.openConnection().getInputStream());
-
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            imageView.setImageBitmap(bmp);
-                            imageView2.setImageBitmap(bmp2);
-                        }
-                    });
-
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                imageView.setImageBitmap(bmp);
+                                imageView2.setImageBitmap(bmp2);
+                            }
+                        });
+                    }
 
                     //Glide.with(getActivity()).load(clothesUrl).into(imageView);
                 } catch (JSONException e) {
