@@ -2,6 +2,8 @@ package com.alexandra.virtual_vogue_mobile;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -18,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -29,6 +33,7 @@ public class outfitCreationFragment extends Fragment {
     SharedPreferences sharedPreferences;
     OkHttpClient client;
     String url, name;
+    ImageView imageView;
     String TAG = "createOutfits";
     TextView text;
     @Override
@@ -39,6 +44,7 @@ public class outfitCreationFragment extends Fragment {
         View parentView =  inflater.inflate(R.layout.fragment_outfit_creation, container, false);
 
         client = new OkHttpClient();
+        imageView = parentView.findViewById(R.id.imageViews);
         //text = parentView.findViewById(R.id.blank);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         name = sharedPreferences.getString("user", null);
@@ -76,7 +82,15 @@ public class outfitCreationFragment extends Fragment {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         imageObj = jsonArray.getJSONObject(i);
 
-
+                        label = imageObj.getString("tag");
+                        URL clothesURL = new URL(imageObj.getString("url"));
+                        Bitmap bitmap = BitmapFactory.decodeStream(clothesURL.openConnection().getInputStream());
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                imageView.setImageBitmap(bitmap);
+                            }
+                        });
                     }
 
                 } catch (JSONException e){
