@@ -118,7 +118,7 @@ public class loginFragment extends Fragment {
                         });
 
                     } else {
-                        if (verified.matches("flse"))
+                        if (verified.matches("false"))
                         {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
