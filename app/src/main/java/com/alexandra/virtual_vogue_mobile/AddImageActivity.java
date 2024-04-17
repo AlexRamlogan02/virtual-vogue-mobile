@@ -7,7 +7,6 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.ImageCapture;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Layout;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -46,11 +44,9 @@ public class AddImageActivity extends AppCompatActivity {
 
     String TAG = "AddImageActivity";
     Uri outOutFileUri;
-    private static final int pic_id = 123;
 
-    String currentPhotoPath;
+    //activity launcher
 
-    //activity launcher for photo library
     ActivityResultLauncher<PickVisualMediaRequest> launcher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
             new ActivityResultCallback<Uri>() {
                 @Override
@@ -75,8 +71,6 @@ public class AddImageActivity extends AppCompatActivity {
         mSubmitButton = findViewById(R.id.submitButton);
         mCancelButton = findViewById(R.id.cancelButton);
 
-        //image view
-        imageView = findViewById(R.id.imageView);
         //set click listeners for buttons
         Log.d(TAG, "onCreate: Grabbed Buttons");
 
@@ -88,7 +82,7 @@ public class AddImageActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: open camera");
                 Intent openCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 try {
-                    startActivityForResult(openCamera, pic_id);
+                    startActivity(openCamera);
                 } catch (Exception e) {
                     Log.e(TAG, "onClick: Error Opening Camera", e);
                 }
@@ -101,6 +95,7 @@ public class AddImageActivity extends AppCompatActivity {
                 //open photo library
                 Log.d(TAG, "onClick: Open Library");
 
+                imageView = findViewById(R.id.imageView);
                 launcher.launch(new PickVisualMediaRequest.Builder().
                         setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build());
@@ -152,15 +147,6 @@ public class AddImageActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d(TAG, "onActivityResult: Check pic_id");
-        if (requestCode == pic_id){
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(photo);
-        }
-        Log.d(TAG, "onActivityResult: ");
-    }
+
 }
