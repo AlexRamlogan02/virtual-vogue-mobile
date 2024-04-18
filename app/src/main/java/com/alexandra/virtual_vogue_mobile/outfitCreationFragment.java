@@ -7,12 +7,18 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,15 +60,22 @@ public class outfitCreationFragment extends Fragment {
     OkHttpClient client;
     String url, name;
     ImageView imageView;
-    LinearLayout closetDisplay;
     String TAG = "createOutfits";
     TextView text;
+    GridLayout displayGrid;
+    View gridRoot;
+    int COL;
+    int ROW;
+
+    ViewGroup root;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
         View parentView =  inflater.inflate(R.layout.fragment_outfit_creation, container, false);
+        root = parentView.findViewById(R.id.frameForGrid);
 
         client = new OkHttpClient();
         imageView = parentView.findViewById(R.id.imageViewShirt);
@@ -73,8 +86,6 @@ public class outfitCreationFragment extends Fragment {
         Closet = new HashMap<Integer, Clothes>();
 
         fetchClothes();
-
-
         return parentView;
     }
 
@@ -112,19 +123,119 @@ public class outfitCreationFragment extends Fragment {
                         //add all to closet
                         Clothes clothing = new Clothes(clothesURL, label, i);
                         Closet.put(i, clothing);
-                    }
-
-                    for (int i = 0; i < Closet.size(); i++) {
-                        Clothes clothing = Closet.get(i);
-                        Log.d(TAG, "onResponse: " + clothing.label);
+                        Log.d(TAG, "onResponse: " + Closet.get(i).label + i);
 
                     }
-
+                    Log.d(TAG, "onCreateView: start display clothes" + Closet.size());
+                    displayClothes();
                 } catch (JSONException e){
                     throw new RuntimeException(e);
                 }
             }
         });
 
+
     }
+
+    public void displayClothes(){
+        Log.d(TAG, "displayClothes: " + Closet.size());
+        //initialize the grid layout
+        ROW = Closet.size();
+        COL = 1;
+        displayGrid = new GridLayout(getActivity());
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        displayGrid.setLayoutParams(params);
+        displayGrid.setColumnCount(COL);
+        displayGrid.setRowCount(ROW);
+
+
+        for (int i = 0; i < ROW; i++) {
+
+            Clothes clothing = Closet.get(i);
+            Log.d(TAG, "displayClothes: " + clothing.label);
+
+            //create a child
+            LinearLayout cardView = new LinearLayout(getActivity());
+            cardView.setElevation(5);
+            cardView.setBackground(getResources().getDrawable(R.drawable.container_card));
+            ViewGroup.LayoutParams cardParams = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            cardView.setLayoutParams(cardParams);
+
+            Log.d(TAG, "displayClothes: set linear layout");
+            //add the label, imageView, and delete button
+            TextView label = new TextView(getActivity());
+            ViewGroup.LayoutParams textParams = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            label.setLayoutParams(textParams);
+
+            //add the text view
+            label.setText(clothing.label);
+            label.setTextColor(getResources().getColor(R.color.black));
+            label.setTypeface(getResources().getFont(R.font.lemands));
+            label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+            label.setGravity(Gravity.CENTER);
+            cardView.addView(label);
+
+            Log.d(TAG, "displayClothes: set text" + clothing.label);
+
+            //add the imageView
+            ImageView currentImage = new ImageView(getActivity());
+            ViewGroup.LayoutParams imageParams = new ViewGroup.LayoutParams(
+                    100, 200
+            );
+            currentImage.setLayoutParams(imageParams);
+            currentImage.setImageBitmap(clothing.image);
+            currentImage.setForegroundGravity(Gravity.CENTER);
+            cardView.addView(currentImage);
+
+            Log.d(TAG, "displayClothes: add image");
+
+            //add the button
+            Button deleteButton = new Button(getActivity());
+            ViewGroup.LayoutParams buttonParams = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            deleteButton.setLayoutParams(buttonParams);
+            deleteButton.setText("Delete");
+            deleteButton.setTextColor(getResources().getColor(R.color.white));
+            deleteButton.setBackgroundColor(getResources().getColor(R.color.blush));
+            deleteButton.setForegroundGravity(Gravity.CENTER);
+            deleteButton.setPadding(10, 10 , 10 , 10);
+            setDeleteButton(deleteButton, i);
+            cardView.addView(deleteButton);
+
+            Log.d(TAG, "displayClothes: add button");
+
+            GridLayout.Spec rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
+            GridLayout.Spec colSpan = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
+
+            GridLayout.LayoutParams gridParams = new GridLayout.LayoutParams(rowSpan, colSpan);
+            displayGrid.addView(cardView, gridParams);
+            Log.d(TAG, "displayClothes: Add Linear Layout");
+        }
+
+        Log.d(TAG, "displayClothes: Try to add to root");
+        root.addView(displayGrid);
+        Log.d(TAG, "displayClothes: finish");
+
+    }
+
+    public void setDeleteButton(final Button button, int child){
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Delete child" + child);
+            }
+        });
+
+    }
+
 }
