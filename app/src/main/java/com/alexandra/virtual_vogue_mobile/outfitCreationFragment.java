@@ -58,7 +58,7 @@ public class outfitCreationFragment extends Fragment {
         }
     }
 
-    public class Outfit{
+    public static class Outfit{
         String pantsID;
         String shirtID;
         String dressID;
@@ -92,7 +92,7 @@ public class outfitCreationFragment extends Fragment {
     }
 
     Map<Integer, Clothes> Closet;
-
+    Outfit outfit;
     SharedPreferences sharedPreferences;
     OkHttpClient client;
     String url, name;
@@ -119,7 +119,7 @@ public class outfitCreationFragment extends Fragment {
         name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/images/" + name;
         Closet = new HashMap<Integer, Clothes>();
-        Outfit outfit = new Outfit();
+        outfit = new Outfit();
 
         fetchClothes();
 
