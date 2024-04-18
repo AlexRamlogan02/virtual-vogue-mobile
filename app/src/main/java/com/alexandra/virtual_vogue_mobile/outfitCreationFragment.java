@@ -152,87 +152,85 @@ public class outfitCreationFragment extends Fragment {
         displayGrid.setRowCount(ROW);
 
 
-        for (int i = 0; i < ROW; i++) {
-
-            Clothes clothing = Closet.get(i);
-            Log.d(TAG, "displayClothes: " + clothing.label);
-
-            //create a child
-            LinearLayout cardView = new LinearLayout(getActivity());
-            cardView.setElevation(5);
-            cardView.setBackground(getResources().getDrawable(R.drawable.container_card));
-            ViewGroup.LayoutParams cardParams = new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            cardView.setLayoutParams(cardParams);
-
-            Log.d(TAG, "displayClothes: set linear layout");
-            //add the label, imageView, and delete button
-            TextView label = new TextView(getActivity());
-            ViewGroup.LayoutParams textParams = new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            label.setLayoutParams(textParams);
-
-            //add the text view
-            label.setText(clothing.label);
-            label.setTextColor(getResources().getColor(R.color.black));
-            label.setTypeface(getResources().getFont(R.font.lemands));
-            label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-            label.setGravity(Gravity.CENTER);
-            cardView.addView(label);
-
-            Log.d(TAG, "displayClothes: set text" + clothing.label);
-
-            //add the imageView
-            ImageView currentImage = new ImageView(getActivity());
-            ViewGroup.LayoutParams imageParams = new ViewGroup.LayoutParams(
-                    100, 200
-            );
-            currentImage.setLayoutParams(imageParams);
-            currentImage.setImageBitmap(clothing.image);
-            currentImage.setForegroundGravity(Gravity.CENTER);
-            cardView.addView(currentImage);
-
-            Log.d(TAG, "displayClothes: add image");
-
-            //add the button
-            Button deleteButton = new Button(getActivity());
-            ViewGroup.LayoutParams buttonParams = new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            deleteButton.setLayoutParams(buttonParams);
-            deleteButton.setText("Delete");
-            deleteButton.setTextColor(getResources().getColor(R.color.white));
-            deleteButton.setBackgroundColor(getResources().getColor(R.color.blush));
-            deleteButton.setForegroundGravity(Gravity.CENTER);
-            deleteButton.setPadding(10, 10 , 10 , 10);
-            setDeleteButton(deleteButton, i);
-            cardView.addView(deleteButton);
-
-            Log.d(TAG, "displayClothes: add button");
-
-            GridLayout.Spec rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
-            GridLayout.Spec colSpan = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
-
-            GridLayout.LayoutParams gridParams = new GridLayout.LayoutParams(rowSpan, colSpan);
-            displayGrid.addView(cardView, gridParams);
-            Log.d(TAG, "displayClothes: Add Linear Layout");
-        }
-
-        Log.d(TAG, "displayClothes: Try to add to root");
-
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                for (int i = 0; i < ROW; i++) {
+
+                    Clothes clothing = Closet.get(i);
+                    Log.d(TAG, "displayClothes: " + clothing.label);
+
+                    //create a child
+                    LinearLayout cardView = new LinearLayout(getActivity());
+                    cardView.setElevation(5);
+                    cardView.setBackground(getResources().getDrawable(R.drawable.container_card));
+                    ViewGroup.LayoutParams cardParams = new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                    );
+                    cardView.setLayoutParams(cardParams);
+
+                    Log.d(TAG, "displayClothes: set linear layout");
+                    //add the label, imageView, and delete button
+                    TextView label = new TextView(getActivity());
+                    ViewGroup.LayoutParams textParams = new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    label.setLayoutParams(textParams);
+
+                    //add the text view
+                    label.setText(clothing.label);
+                    label.setTextColor(getResources().getColor(R.color.black));
+                    label.setTypeface(getResources().getFont(R.font.lemands));
+                    label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                    label.setGravity(Gravity.CENTER);
+                    cardView.addView(label);
+
+                    Log.d(TAG, "displayClothes: set text" + clothing.label);
+
+                    //add the imageView
+                    ImageView currentImage = new ImageView(getActivity());
+                    ViewGroup.LayoutParams imageParams = new ViewGroup.LayoutParams(
+                            100, 200
+                    );
+                    currentImage.setLayoutParams(imageParams);
+                    currentImage.setImageBitmap(clothing.image);
+                    currentImage.setForegroundGravity(Gravity.CENTER);
+                    cardView.addView(currentImage);
+
+                    Log.d(TAG, "displayClothes: add image");
+
+                    //add the button
+                    Button deleteButton = new Button(getActivity());
+                    ViewGroup.LayoutParams buttonParams = new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    deleteButton.setLayoutParams(buttonParams);
+                    deleteButton.setText("Delete");
+                    deleteButton.setTextColor(getResources().getColor(R.color.white));
+                    deleteButton.setBackgroundColor(getResources().getColor(R.color.blush));
+                    deleteButton.setForegroundGravity(Gravity.CENTER);
+                    deleteButton.setPadding(10, 10 , 10 , 10);
+                    setDeleteButton(deleteButton, i);
+                    cardView.addView(deleteButton);
+
+                    Log.d(TAG, "displayClothes: add button");
+
+                    GridLayout.Spec rowSpan = GridLayout.spec(i, 1,1);
+                    GridLayout.Spec colSpan = GridLayout.spec(0, 1,1);
+
+                    GridLayout.LayoutParams gridParams = new GridLayout.LayoutParams(rowSpan, colSpan);
+                    displayGrid.addView(cardView, gridParams);
+                    Log.d(TAG, "displayClothes: Add Linear Layout");
+                }
+                Log.d(TAG, "displayClothes: Try to add to root");
                 root.addView(displayGrid);
+                Log.d(TAG, "displayClothes: finish");
             }
         });
 
-        Log.d(TAG, "displayClothes: finish");
 
     }
 
