@@ -23,6 +23,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -153,33 +155,43 @@ public class myOutfits extends Fragment {
                                     ImageView imgView = new ImageView(getActivity());
                                     ImageView imgView2 = new ImageView(getActivity());
                                     TextView textView = new TextView(getContext());
+                                    LinearLayout innerLayout = new LinearLayout(getContext());
+                                    LinearLayout.LayoutParams linParams = new LinearLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.MATCH_PARENT,
+                                            ViewGroup.LayoutParams.MATCH_PARENT);
+                                    linParams.setMargins(45, 25, 45, 25);
+                                    innerLayout.setLayoutParams(linParams);
                                     
-                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(650, 650);
-                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(650, 650);
-                                    lp.setMargins(-225,0,0,0);
-                                    lp2.setMargins(-225,0,0,180);
+                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                                            ViewGroup.LayoutParams.WRAP_CONTENT
+                                    );
+                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                                            ViewGroup.LayoutParams.WRAP_CONTENT
+                                    );
+                                    innerLayout.setOrientation(LinearLayout.VERTICAL);
+                                    innerLayout.setGravity(Gravity.CENTER);
 
                                     imgView.setLayoutParams(lp);
                                     imgView2.setLayoutParams(lp2);
-                                    imgView.setPadding(-25,15,-25,15);
-                                    imgView2.setPadding(-50,15,-50,-15);
-                                    imgView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.container_card));
-                                    imgView2.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.container_card));
-
-                                    linearLayout.addView(textView);
-                                    linearLayout.addView(imgView);
-                                    linearLayout.addView(imgView2);
-
+                                    //imgView.setPadding(25,15,25,15);
+                                    //imgView2.setPadding(50,15,50,15);
+                                    innerLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.container_card));
 
                                     textView.setText(name);
                                     textView.setTextColor(getResources().getColor(R.color.black));
-                                    textView.setTextSize(50);
-                                    textView.setX(820);
-                                    textView.setY(600);
+                                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+
                                     textView.setTypeface(typeface);
+                                    textView.setGravity(Gravity.CENTER);
 
                                     imgView.setImageBitmap(bmp);
                                     imgView2.setImageBitmap(bmp2);
+                                    innerLayout.addView(textView);
+                                    innerLayout.addView(imgView);
+                                    innerLayout.addView(imgView2);
+                                    linearLayout.addView(innerLayout);
                                 }
                             });
                         }
