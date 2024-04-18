@@ -109,27 +109,27 @@ public class outfitCreationFragment extends Fragment {
 
                 try {
                     jobj = new JSONObject(json);
-                    JSONArray jsonArray = jobj.getJSONArray("images");
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-
-
-                        imageObj = jsonArray.getJSONObject(i);
-
-                        label = imageObj.getString("tag");
-                        URL clothesURL = new URL(imageObj.getString("url"));
-                        Bitmap bitmap = BitmapFactory.decodeStream(clothesURL.openConnection().getInputStream());
-
-
-                        //add all to closet
-                        Clothes clothing = new Clothes(clothesURL, label, i);
-                        Closet.put(i, clothing);
-                        Log.d(TAG, "onResponse: " + Closet.get(i).label + i);
+                    if (!jobj.getBoolean("success")){
 
                     }
-                    Log.d(TAG, "onCreateView: start display clothes" + Closet.size());
-                    displayClothes();
-                } catch (JSONException e){
+                    else {
+                        JSONArray jsonArray = jobj.getJSONArray("images");
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            imageObj = jsonArray.getJSONObject(i);
+                            label = imageObj.getString("tag");
+                            URL clothesURL = new URL(imageObj.getString("url"));
+                            Bitmap bitmap = BitmapFactory.decodeStream(clothesURL.openConnection().getInputStream());
+                            //add all to closet
+                            Clothes clothing = new Clothes(clothesURL, label, i);
+                            Closet.put(i, clothing);
+                            Log.d(TAG, "onResponse: " + Closet.get(i).label + i);
+
+                        }
+                        Log.d(TAG, "onCreateView: start display clothes" + Closet.size());
+                        displayClothes();
+                    }
+                } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
             }
