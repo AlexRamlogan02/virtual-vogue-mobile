@@ -26,10 +26,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.alexandra.virtual_vogue_mobile.databinding.FragmentMyOutfitsBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -62,6 +62,7 @@ public class myOutfits extends Fragment {
     String url;
     SharedPreferences sharedPreferences;
     ImageView imageView, imageView2;
+    LinearLayout linearLayout;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -72,6 +73,7 @@ public class myOutfits extends Fragment {
 
         client = new OkHttpClient();
         text = parentView.findViewById(R.id.outfitsTitle);
+        linearLayout = (LinearLayout) parentView.findViewById(R.id.imagesLayout);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         String name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
@@ -124,28 +126,38 @@ public class myOutfits extends Fragment {
                     jobj = new JSONObject(json);
 
                     if (!jobj.getBoolean("success")){
-
+                        imageView.setVisibility(View.GONE);
+                        imageView2.setVisibility(View.GONE);
                     }
                     else {
                         JSONArray jsonArray = jobj.getJSONArray("outfits");
-                        JSONObject outfit = jsonArray.getJSONObject(0);
-                        String clothesUrl = outfit.getString("shirtURL");
-                        String pantsUrl = outfit.getString("pantsURL");
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject outfit = jsonArray.getJSONObject(i);
+                            String clothesUrl = outfit.getString("shirtURL");
+                            String pantsUrl = outfit.getString("pantsURL");
 
 
-                        URL curl = new URL(clothesUrl);
-                        URL pants = new URL(pantsUrl);
-                        Bitmap bmp = BitmapFactory.decodeStream(curl.openConnection().getInputStream());
-                        Bitmap bmp2 = BitmapFactory.decodeStream(pants.openConnection().getInputStream());
+                            URL curl = new URL(clothesUrl);
+                            URL pants = new URL(pantsUrl);
+                            Bitmap bmp = BitmapFactory.decodeStream(curl.openConnection().getInputStream());
+                            Bitmap bmp2 = BitmapFactory.decodeStream(pants.openConnection().getInputStream());
 
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ImageView imgView = new ImageView(getActivity());
+                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 250);
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageView.setImageBitmap(bmp);
-                                imageView2.setImageBitmap(bmp2);
-                            }
-                        });
+                                    imgView.setLayoutParams(lp);
+                                    imgView.setImageBitmap(bmp2);
+                                    linearLayout.addView(imgView);
+
+                                    imageView.setImageBitmap(bmp);
+                                    imageView2.setImageBitmap(bmp2);
+                                }
+                            });
+                        }
                     }
 
                     //Glide.with(getActivity()).load(clothesUrl).into(imageView);

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -80,6 +81,8 @@ public class outfitCreationFragment extends Fragment {
                     JSONArray jsonArray = jobj.getJSONArray("images");
 
                     for (int i = 0; i < jsonArray.length(); i++) {
+
+
                         imageObj = jsonArray.getJSONObject(i);
 
                         label = imageObj.getString("tag");
@@ -88,8 +91,6 @@ public class outfitCreationFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
-
                                 imageView.setImageBitmap(bitmap);
                             }
                         });
