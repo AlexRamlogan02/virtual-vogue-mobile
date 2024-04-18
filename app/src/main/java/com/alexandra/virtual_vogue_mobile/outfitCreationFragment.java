@@ -121,35 +121,40 @@ public class outfitCreationFragment extends Fragment {
 
                 try {
                     jobj = new JSONObject(json);
-                    JSONArray jsonArray = jobj.getJSONArray("images");
 
-                    for (int i = 0; i < jsonArray.length() - 1; i++) {
-                        imageObj = jsonArray.getJSONObject(i);
+                    if (!jobj.getBoolean("success")){
 
-                        label = imageObj.getString("tag");
-                        id = imageObj.getString("publicId");
-                        URL clothesURL = new URL(imageObj.getString("url"));
-                        //add all to closet
-                        Clothes clothing = new Clothes(clothesURL, label, i, id);
-                        Closet.put(i, clothing);
-                        Log.d(TAG, "onResponse: " + Closet.get(i).label + i);
                     }
-                    Log.d(TAG, "onResponse: finish" + String.valueOf(call.isCanceled()));
+                    else {
+                        JSONArray jsonArray = jobj.getJSONArray("images");
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.d(TAG, "onCreateView: Finish fetch");
-                            try {
-                                Log.d(TAG, "onCreateView: Display Cothes" + Closet.size());
-                                displayClothes();
-                            } catch (Exception e) {
-                                Log.d(TAG, "onResponse: Didn't work :/");
-                                Log.e(TAG, "onResponse: ", e);
-                            }
+                        for (int i = 0; i < jsonArray.length() - 1; i++) {
+                            imageObj = jsonArray.getJSONObject(i);
+
+                            label = imageObj.getString("tag");
+                            id = imageObj.getString("publicId");
+                            URL clothesURL = new URL(imageObj.getString("url"));
+                            //add all to closet
+                            Clothes clothing = new Clothes(clothesURL, label, i, id);
+                            Closet.put(i, clothing);
+                            Log.d(TAG, "onResponse: " + Closet.get(i).label + i);
                         }
-                    });
+                        Log.d(TAG, "onResponse: finish" + String.valueOf(call.isCanceled()));
 
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "onCreateView: Finish fetch");
+                                try {
+                                    Log.d(TAG, "onCreateView: Display Cothes" + Closet.size());
+                                    displayClothes();
+                                } catch (Exception e) {
+                                    Log.d(TAG, "onResponse: Didn't work :/");
+                                    Log.e(TAG, "onResponse: ", e);
+                                }
+                            }
+                        });
+                    }
 
                 } catch (Exception e) {
                     Log.e(TAG, "onResponse: ", e);
