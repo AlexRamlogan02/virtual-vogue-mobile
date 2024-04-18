@@ -156,9 +156,10 @@ public class myOutfits extends Fragment {
 
                                     //LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                     //LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(700, 700);
-                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(700, 700);
-                                    lp2.setMargins(0,0,0,250);
+                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(650, 650);
+                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(650, 650);
+                                    lp.setMargins(-225,0,0,0);
+                                    lp2.setMargins(-225,0,0,180);
 
                                     imgView.setLayoutParams(lp);
                                     imgView2.setLayoutParams(lp2);
@@ -175,8 +176,10 @@ public class myOutfits extends Fragment {
                                     textView.setText(name);
                                     textView.setTextColor(getResources().getColor(R.color.black));
                                     textView.setTextSize(50);
-                                    textView.setX(500);
+                                    textView.setX(820);
+                                    textView.setY(600);
                                     textView.setTypeface(typeface);
+
                                     imgView.setImageBitmap(bmp);
                                     imgView2.setImageBitmap(bmp2);
                                 }
