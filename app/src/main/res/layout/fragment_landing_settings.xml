@@ -106,6 +106,19 @@
                 android:textStyle="italic"
                 />
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/blush"
+                android:textColor="@color/white"
+                android:text="Log Out"
+                android:id="@+id/logoutButton"
+                android:paddingHorizontal="20dp"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:textStyle="italic"
+                />
+
 
         </LinearLayout>
 
@@ -273,6 +286,7 @@
                 android:layout_margin="15dp"
                 android:textStyle="italic"
                 />
+
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -41,23 +41,19 @@
         android:id="@+id/myOutfitsScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/outfitsTitle"
         app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="31dp">
+        tools:layout_editor_absoluteX="31dp"
+        android:paddingHorizontal="45dp"
+        >
 
         <LinearLayout
             android:id="@+id/imagesLayout"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
-
-
-
-
-
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

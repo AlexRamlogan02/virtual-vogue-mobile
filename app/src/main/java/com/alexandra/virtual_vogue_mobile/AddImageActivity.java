@@ -1,9 +1,11 @@
 package com.alexandra.virtual_vogue_mobile;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,6 +35,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +72,7 @@ public class AddImageActivity extends AppCompatActivity {
     boolean selectedType;
     boolean imageLoaded;
     private static final int pic_id = 123;
+    Uri importImage;
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -80,7 +85,16 @@ public class AddImageActivity extends AppCompatActivity {
                         //Toast.makeText(AddImageActivity.this, "No Image Selected!", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onActivityResult: No  Image Selected");
                     } else {
+                        importImage = o;
+                        imageLoaded = true;
+
                         Glide.with(getApplicationContext()).load(o).into(imageView);
+
+                        Log.d(TAG, "onActivityResult: " + String.valueOf(imageLoaded));
+                        if (canEnable()){
+                            mSubmitButton.setEnabled(true);
+                            mSubmitButton.setBackgroundColor(getResources().getColor(R.color.reseda_green));
+                        }
                     }
                 }
             }
@@ -107,6 +121,7 @@ public class AddImageActivity extends AppCompatActivity {
         mOpenCameraButton = findViewById(R.id.takePictureButton);
         mSubmitButton = findViewById(R.id.submitButton);
         mCancelButton = findViewById(R.id.cancelButton);
+        importImage = null; //inital value
 
         //image view
         imageView = findViewById(R.id.imageView);
@@ -141,6 +156,7 @@ public class AddImageActivity extends AppCompatActivity {
                 launcher.launch(new PickVisualMediaRequest.Builder().
                         setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build());
+
             }
         });
 
@@ -215,7 +231,7 @@ public class AddImageActivity extends AppCompatActivity {
                 photo.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 Log.d(TAG, "onActivityResult: Successful Compression");
             }catch (Exception e){
-                Toast.makeText(AddImageActivity.this, "Error saving image! Please try again", Toast.LENGTH_SHORT);
+                Toast.makeText(AddImageActivity.this, "Error saving image! Please try again", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -230,10 +246,28 @@ public class AddImageActivity extends AppCompatActivity {
 
     private void post(){
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("userId", userID)
-                .addFormDataPart("image", "filename.png", RequestBody.create(MediaType.parse("image/*jpg"), out.toByteArray()))
-                .addFormDataPart("tag", getResources().getString(selectedClothing))
-                .build();
+                    .addFormDataPart("userId", userID)
+                    .addFormDataPart("image", "filename.png", RequestBody.create(MediaType.parse("image/*jpg"), out.toByteArray()))
+                    .addFormDataPart("tag", getResources().getString(selectedClothing))
+                    .build();
+        if(importImage != null) {
+            byte[] data = null;
+            try {
+                ContentResolver cr = getBaseContext().getContentResolver();
+                InputStream inputStream = cr.openInputStream(importImage);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                data = baos.toByteArray();
+                body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart("userId", userID)
+                        .addFormDataPart("image", "filename.png", RequestBody.create(MediaType.parse("image/*jpg"), data))
+                        .addFormDataPart("tag", getResources().getString(selectedClothing))
+                        .build();
+            } catch (Exception e){
+                Log.e(TAG, "post: ", e);
+            }
+        }
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
