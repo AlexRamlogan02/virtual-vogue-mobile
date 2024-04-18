@@ -120,6 +120,7 @@ public class outfitCreationFragment extends Fragment {
                         URL clothesURL = new URL(imageObj.getString("url"));
                         Bitmap bitmap = BitmapFactory.decodeStream(clothesURL.openConnection().getInputStream());
 
+
                         //add all to closet
                         Clothes clothing = new Clothes(clothesURL, label, i);
                         Closet.put(i, clothing);
@@ -231,7 +232,14 @@ public class outfitCreationFragment extends Fragment {
         }
 
         Log.d(TAG, "displayClothes: Try to add to root");
-        root.addView(displayGrid);
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                root.addView(displayGrid);
+            }
+        });
+
         Log.d(TAG, "displayClothes: finish");
 
     }
