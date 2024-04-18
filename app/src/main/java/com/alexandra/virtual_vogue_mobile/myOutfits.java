@@ -77,7 +77,8 @@ public class myOutfits extends Fragment {
         View parentView =  inflater.inflate(R.layout.fragment_my_outfits, container, false);
 
         client = new OkHttpClient();
-        text = parentView.findViewById(R.id.outfitsTitle);
+        text = parentView.findViewById(R.id.outfitsTitleS);
+        text.setVisibility(View.GONE);
         linearLayout = (LinearLayout) parentView.findViewById(R.id.imagesLayout);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         String name = sharedPreferences.getString("user", null);
@@ -131,7 +132,7 @@ public class myOutfits extends Fragment {
                     jobj = new JSONObject(json);
 
                     if (!jobj.getBoolean("success")){
-
+                        text.setVisibility(View.VISIBLE);
                     }
                     else {
                         JSONArray jsonArray = jobj.getJSONArray("outfits");

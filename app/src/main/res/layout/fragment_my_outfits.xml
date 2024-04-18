@@ -54,6 +54,22 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/outfitsTitleS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lemands"
+                android:gravity="center"
+                android:layout_marginTop="150dp"
+                android:padding="25sp"
+                android:text="You have no outfits!\nMake one!"
+                android:textColor="@color/black"
+                android:textSize="40sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
