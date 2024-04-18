@@ -154,15 +154,15 @@ public class myOutfits extends Fragment {
                                     ImageView imgView2 = new ImageView(getActivity());
                                     TextView textView = new TextView(getContext());
 
-                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(650, 650);
-                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(650, 650);
+                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                     lp.setMargins(-225,0,0,0);
                                     lp2.setMargins(-225,0,0,180);
 
                                     imgView.setLayoutParams(lp);
                                     imgView2.setLayoutParams(lp2);
-                                    imgView.setPadding(-25,15,-25,15);
-                                    imgView2.setPadding(-50,15,-50,-15);
+                                    imgView.setPadding(25,15,25,15);
+                                    imgView2.setPadding(25,15,25,15);
                                     imgView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.container_card));
                                     imgView2.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.container_card));
 
@@ -174,7 +174,7 @@ public class myOutfits extends Fragment {
                                     textView.setText(name);
                                     textView.setTextColor(getResources().getColor(R.color.black));
                                     textView.setTextSize(50);
-                                    textView.setX(820);
+                                    textView.setX(550);
                                     textView.setY(600);
                                     textView.setTypeface(typeface);
 
