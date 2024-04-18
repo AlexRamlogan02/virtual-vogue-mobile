@@ -1,6 +1,7 @@
 package com.alexandra.virtual_vogue_mobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -50,8 +51,11 @@ public class outfitCreationFragment extends Fragment {
         int mapIndex;
         Bitmap image;
 
-        public Clothes(URL imageUrl, String label, int mapIndex) throws IOException {
+        String id;
+
+        public Clothes(URL imageUrl, String label, int mapIndex, String id) throws IOException {
             this.imageUrl = imageUrl;
+            this.id = id;
             this.label = label;
             this.mapIndex = mapIndex;
             image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
@@ -95,9 +99,11 @@ public class outfitCreationFragment extends Fragment {
     Outfit outfit;
     SharedPreferences sharedPreferences;
     OkHttpClient client;
-    String url, name;
+    String url, url2, name;
     ImageView imageView;
+    Map<String, String> params;
     String TAG = "createOutfits";
+    JSONObject parameter;
     int COL;
     int ROW;
     ViewGroup root;
@@ -112,12 +118,14 @@ public class outfitCreationFragment extends Fragment {
         View parentView = inflater.inflate(R.layout.fragment_outfit_creation, container, false);
         root = (LinearLayout) parentView.findViewById(R.id.frameForGrid);
 
+        params = new HashMap<String, String>();
         client = new OkHttpClient();
         imageView = parentView.findViewById(R.id.imageViewShirt);
         //text = parentView.findViewById(R.id.blank);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/images/" + name;
+        url2 = "https://virtvogue-af76e325d3c9.herokuapp.com/api/DeletePhoto/" + name;
         Closet = new HashMap<Integer, Clothes>();
         outfit = new Outfit();
 
@@ -144,37 +152,43 @@ public class outfitCreationFragment extends Fragment {
                 JSONObject jobj = null;
                 JSONObject imageObj = null;
                 String label;
+                String id;
 
                 try {
                     jobj = new JSONObject(json);
-                    JSONArray jsonArray = jobj.getJSONArray("images");
+                    if (!jobj.getBoolean("success")){
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        imageObj = jsonArray.getJSONObject(i);
-
-                        label = imageObj.getString("tag");
-                        URL clothesURL = new URL(imageObj.getString("url"));
-                        //add all to closet
-                        Clothes clothing = new Clothes(clothesURL, label, i);
-                        Closet.put(i, clothing);
-                        Log.d(TAG, "onResponse: " + Closet.get(i).label + i);
                     }
-                    Log.d(TAG, "onResponse: finish" + String.valueOf(call.isCanceled()));
+                    else {
+                        JSONArray jsonArray = jobj.getJSONArray("images");
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                                Log.d(TAG, "onCreateView: Finish fetch");
-                            try {
-                                Log.d(TAG, "onCreateView: Display Cothes" + Closet.size());
-                                displayClothes();
-                            } catch (Exception e) {
-                                Log.d(TAG, "onResponse: Didn't work :/");
-                                Log.e(TAG, "onResponse: ", e);
-                            }
+                        for (int i = 0; i < jsonArray.length() - 1; i++) {
+                            imageObj = jsonArray.getJSONObject(i);
+
+                            label = imageObj.getString("tag");
+                            id = imageObj.getString("publicId");
+                            URL clothesURL = new URL(imageObj.getString("url"));
+                            //add all to closet
+                            Clothes clothing = new Clothes(clothesURL, label, i, id);
+                            Closet.put(i, clothing);
+                            Log.d(TAG, "onResponse: " + Closet.get(i).label + i);
                         }
-                    });
+                        Log.d(TAG, "onResponse: finish" + String.valueOf(call.isCanceled()));
 
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "onCreateView: Finish fetch");
+                                try {
+                                    Log.d(TAG, "onCreateView: Display Cothes" + Closet.size());
+                                    displayClothes();
+                                } catch (Exception e) {
+                                    Log.d(TAG, "onResponse: Didn't work :/");
+                                    Log.e(TAG, "onResponse: ", e);
+                                }
+                            }
+                        });
+                    }
 
                 } catch (Exception e) {
                     Log.e(TAG, "onResponse: ", e);
@@ -212,7 +226,6 @@ public class outfitCreationFragment extends Fragment {
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
-
             if (curCol == 3){
                 curCol = 0;
                 curRow++;
@@ -224,8 +237,6 @@ public class outfitCreationFragment extends Fragment {
             linearLayout.setForegroundGravity(Gravity.CENTER);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             linearLayout.setPadding(30, 30 , 30, 30);
-
-
             //add the label, imageView, and delete button
             TextView label = new TextView(getActivity());
             ViewGroup.LayoutParams textParams = new ViewGroup.LayoutParams(
@@ -254,6 +265,7 @@ public class outfitCreationFragment extends Fragment {
             currentImage.setImageBitmap(clothing.image);
             currentImage.setForegroundGravity(Gravity.CENTER);
             setImageClick(currentImage, clothing, i);
+
             linearLayout.addView(currentImage);
 
             Log.d(TAG, "displayClothes: add image");
@@ -275,7 +287,6 @@ public class outfitCreationFragment extends Fragment {
             linearLayout.addView(deleteButton);
 
             Log.d(TAG, "displayClothes: add button");
-
 
             GridLayout.Spec row = GridLayout.spec(curRow);
             GridLayout.Spec col = GridLayout.spec(curCol,1);
@@ -333,5 +344,30 @@ public class outfitCreationFragment extends Fragment {
             }
         });
     }
+
+    public void deleteOutfit()
+    {
+        RequestBody body = RequestBody.create(JSON, parameter.toString());
+        Request request = new Request.Builder()
+                .url(url2)
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Intent intent = new Intent(getActivity(), landingPage.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
 
 }

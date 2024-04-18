@@ -67,6 +67,7 @@ public class loginFragment extends Fragment {
                 params.put("login", login);
                 params.put("password", password);
                 parameter = new JSONObject(params);
+
                 post();
             }
         });
