@@ -120,6 +120,7 @@ public class outfitCreationFragment extends Fragment {
                         URL clothesURL = new URL(imageObj.getString("url"));
                         Bitmap bitmap = BitmapFactory.decodeStream(clothesURL.openConnection().getInputStream());
 
+
                         //add all to closet
                         Clothes clothing = new Clothes(clothesURL, label, i);
                         Closet.put(i, clothing);

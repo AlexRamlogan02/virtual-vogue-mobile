@@ -129,8 +129,7 @@ public class myOutfits extends Fragment {
                     jobj = new JSONObject(json);
 
                     if (!jobj.getBoolean("success")){
-                        imageView.setVisibility(View.GONE);
-                        imageView2.setVisibility(View.GONE);
+
                     }
                     else {
                         JSONArray jsonArray = jobj.getJSONArray("outfits");
