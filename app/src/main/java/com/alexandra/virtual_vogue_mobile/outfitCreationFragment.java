@@ -312,7 +312,7 @@ public class outfitCreationFragment extends Fragment {
                 if(tag.equals("Shirt")) {
                     img = getActivity().findViewById(R.id.imageViewShirt);
                     Log.d(TAG, "onClick: add shirt");
-                } else if (tag.equals("Bottoms")) {
+                } else if (tag.equals("Pants")) {
                     img = getActivity().findViewById(R.id.imageViewPants);
                     Log.d(TAG, "onClick: add Pants");
                 } else{
