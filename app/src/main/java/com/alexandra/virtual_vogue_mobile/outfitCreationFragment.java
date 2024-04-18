@@ -23,6 +23,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,6 +33,23 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class outfitCreationFragment extends Fragment {
+
+    public static class Clothes{
+
+        String label;
+        URL imageUrl;
+        int mapIndex;
+        Bitmap image;
+        public Clothes(URL imageUrl, String label, int mapIndex) throws IOException {
+            this.imageUrl = imageUrl;
+            this.label = label;
+            this.mapIndex = mapIndex;
+            image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+        }
+    }
+
+    Map<Integer, Clothes> Closet;
+
     SharedPreferences sharedPreferences;
     OkHttpClient client;
     String url, name;
@@ -51,7 +70,7 @@ public class outfitCreationFragment extends Fragment {
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/images/" + name;
-
+        Closet = new HashMap<Integer, Clothes>();
 
         fetchClothes();
 
@@ -88,7 +107,14 @@ public class outfitCreationFragment extends Fragment {
                         URL clothesURL = new URL(imageObj.getString("url"));
                         Bitmap bitmap = BitmapFactory.decodeStream(clothesURL.openConnection().getInputStream());
 
-                        //add all
+                        //add all to closet
+                        Clothes clothing = new Clothes(clothesURL, label, i);
+                        Closet.put(i, clothing);
+                    }
+
+                    for (int i = 0; i < Closet.size(); i++) {
+                        Clothes clothing = Closet.get(i);
+                        Log.d(TAG, "onResponse: " + clothing.label);
                     }
 
                 } catch (JSONException e){

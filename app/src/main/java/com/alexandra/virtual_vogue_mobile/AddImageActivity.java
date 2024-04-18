@@ -221,7 +221,6 @@ public class AddImageActivity extends AppCompatActivity {
         }
         Log.d(TAG, "onActivityResult: ");
     }
-}
 
     private boolean canEnable(){
         return(selectedType && imageLoaded);
