@@ -223,7 +223,14 @@ public class outfitCreationFragment extends Fragment {
         }
 
         Log.d(TAG, "displayClothes: Try to add to root");
-        root.addView(displayGrid);
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                root.addView(displayGrid);
+            }
+        });
+
         Log.d(TAG, "displayClothes: finish");
 
     }
