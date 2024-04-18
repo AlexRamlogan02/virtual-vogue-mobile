@@ -127,7 +127,15 @@ public class outfitCreationFragment extends Fragment {
 
                     }
                     Log.d(TAG, "onCreateView: start display clothes" + Closet.size());
-                    displayClothes();
+
+                    try {
+
+                        displayClothes();
+                    }catch (Exception e){
+                        Log.d(TAG, "onResponse: Didn't work :/");
+                        Log.e(TAG, "onResponse: ", e);
+                    }
+
                 } catch (JSONException e){
                     throw new RuntimeException(e);
                 }
