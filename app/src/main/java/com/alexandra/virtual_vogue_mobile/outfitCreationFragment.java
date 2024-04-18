@@ -307,11 +307,14 @@ public class outfitCreationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ImageView img;
+                Log.d(TAG, "onClick: " + tag);
 
                 if(tag.equals("Shirt")) {
                     img = getActivity().findViewById(R.id.imageViewShirt);
+                    Log.d(TAG, "onClick: add shirt");
                 } else if (tag.equals("Pants")) {
                     img = getActivity().findViewById(R.id.imageViewPants);
+                    Log.d(TAG, "onClick: add Pants");
                 } else{
                     ImageView shirt = getActivity().findViewById(R.id.imageViewShirt);
                     ImageView pants = getActivity().findViewById(R.id.imageViewPants);
@@ -322,6 +325,8 @@ public class outfitCreationFragment extends Fragment {
                     img = getActivity().findViewById(R.id.imageViewDress);
                     shirt.setVisibility(View.GONE);
                     pants.setVisibility(View.GONE);
+
+                    Log.d(TAG, "onClick: add dress");
                 }
                 img.setVisibility(View.VISIBLE);
                 img.setImageBitmap(clothing.image);
