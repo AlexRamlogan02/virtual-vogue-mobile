@@ -48,29 +48,31 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:layout_margin="25dp"
-                android:background="@color/blush"
                 android:id="@+id/imageViewShirt"
+                android:layout_gravity="center"
+                android:visibility="gone"
                 android:contentDescription="@string/the_selected_shirt" />
 
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:layout_margin="25dp"
-                android:background="@color/blush"
                 android:id="@+id/imageViewPants"
+                android:visibility="gone"
+                android:layout_gravity="center"
                 />
 
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:layout_margin="25dp"
-                android:background="@color/blush"
                 android:id="@+id/imageViewDress"
                 android:visibility="gone"
+                android:layout_gravity="center"
                 />
 
             <TextView
@@ -124,10 +126,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/frameForGrid"
-            android:gravity="center"
             android:orientation="vertical"
+            android:background="@color/white"
+            android:gravity="center"
             app:layout_constraintTop_toBottomOf="@id/closetTitle"
-            />
+            >
+
+        </LinearLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
