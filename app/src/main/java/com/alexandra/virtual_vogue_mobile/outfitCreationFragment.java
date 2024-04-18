@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -34,6 +35,7 @@ public class outfitCreationFragment extends Fragment {
     OkHttpClient client;
     String url, name;
     ImageView imageView;
+    LinearLayout closetDisplay;
     String TAG = "createOutfits";
     TextView text;
     @Override
@@ -85,14 +87,8 @@ public class outfitCreationFragment extends Fragment {
                         label = imageObj.getString("tag");
                         URL clothesURL = new URL(imageObj.getString("url"));
                         Bitmap bitmap = BitmapFactory.decodeStream(clothesURL.openConnection().getInputStream());
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
 
-
-                                imageView.setImageBitmap(bitmap);
-                            }
-                        });
+                        //add all
                     }
 
                 } catch (JSONException e){

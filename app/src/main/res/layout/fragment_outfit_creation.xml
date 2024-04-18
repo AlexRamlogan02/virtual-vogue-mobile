@@ -121,12 +121,6 @@
             android:background="@color/white"
             android:id="@+id/closetTitle"/>
 
-        <GridView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/gridView"
-            android:numColumns="2"/>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
