@@ -1,5 +1,6 @@
 package com.alexandra.virtual_vogue_mobile;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,10 +43,10 @@ public class landingSettingsFragment extends Fragment {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     boolean confirmation;
-
     Button makeChangesButton;
     Button saveChangesButton;
     Button deleteAccountButton;
+    Button logOutButton;
     LinearLayout defaultSettingsView;
     LinearLayout editSettingsView;
     TextView firstNameTV;
@@ -131,9 +133,9 @@ public class landingSettingsFragment extends Fragment {
         firstNameTV.setText(display);
 
         display = "Last Name: " + lastName;
-        lastNameTV.setText(lastName);
+        lastNameTV.setText(display);
         display = "Email: " + email;
-        emailTV.setText(email);
+        emailTV.setText(display);
         //disguise the password
         StringBuilder tempPass = new StringBuilder();
         for (int i = 0; i < password.length(); i++) {
@@ -142,9 +144,9 @@ public class landingSettingsFragment extends Fragment {
             tempPass.append("*");
         }
         display = "Password: " + tempPass.toString();
-        passwordTV.setText(password);
+        passwordTV.setText(display);
         display = "Username: " + username;
-        usernameTV.setText(username);
+        usernameTV.setText(display);
 
 
     }
@@ -153,6 +155,7 @@ public class landingSettingsFragment extends Fragment {
         makeChangesButton = parentView.findViewById(R.id.changeSettingsButton);
         saveChangesButton = parentView.findViewById(R.id.saveChangesButton);
         deleteAccountButton = parentView.findViewById(R.id.deleteAccountButton);
+        logOutButton = parentView.findViewById(R.id.logoutButton);
 
         makeChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,6 +185,9 @@ public class landingSettingsFragment extends Fragment {
                 Log.d(TAG, "onClick: Get Input");
                 try {
                     tempFName = firstNameE.getText().toString();
+                    if (tempFName.isEmpty()){
+                        tempFName = firstName;
+                    }
                     Log.d(TAG, "onClick: " + tempFName);
                 }
                 catch(Exception e){
@@ -190,16 +196,21 @@ public class landingSettingsFragment extends Fragment {
                 }
 
                 try {
-                     tempLName = lastNameE.getText().toString();
+                    tempLName = lastNameE.getText().toString();
+                    if (tempLName.isEmpty()){
+                        tempLName = lastName;
+                    }
                     Log.d(TAG, "onClick: " + tempLName);
                 }
                 catch(Exception e){
                     tempLName = lastName;
                     Log.e(TAG, "onClick: Empty Last Name", e);
                 }
-
                 try {
                     tempUser = usernameE.getText().toString();
+                    if (tempUser.isEmpty()){
+                        tempUser = username;
+                    }
                     Log.d(TAG, "onClick: " + tempUser);
                 }catch(Exception e){
                     tempUser = username;
@@ -208,6 +219,9 @@ public class landingSettingsFragment extends Fragment {
 
                 try {
                     tempEmail = emailE.getText().toString();
+                    if (tempEmail.isEmpty()){
+                        tempEmail = email;
+                    }
                     Log.d(TAG, "onClick: " + tempEmail);
                 }
                 catch (Exception e){
@@ -216,6 +230,9 @@ public class landingSettingsFragment extends Fragment {
                 }
                 try {
                     tempPassword = String.valueOf(passwordE.getText());
+                    if (tempPassword.isEmpty()){
+                        tempPassword = password;
+                    }
                     Log.d(TAG, "onClick: " + tempEmail);
                 }
                 catch (Exception e){
@@ -256,6 +273,14 @@ public class landingSettingsFragment extends Fragment {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+            }
+        });
+
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -307,14 +332,14 @@ public class landingSettingsFragment extends Fragment {
 
     public void initializeEditText(View parentView) {
         firstNameE = parentView.findViewById(R.id.settingsEditFirstName);
-        lastNameE = parentView.findViewById(R.id.settingsLastName);
+        lastNameE = parentView.findViewById(R.id.settingsEditLastName);
         usernameE = parentView.findViewById(R.id.settingsEditUsername);
         emailE = parentView.findViewById(R.id.settingsEditEmail);
         passwordE = parentView.findViewById(R.id.settingsEditPassword);
     }
     public void postChanges() {
 
-        Log.d(TAG, "postChanges: Begin");
+        Log.d(TAG, "postChanges: Begin" + parameter);
         RequestBody body = RequestBody.create(JSON, parameter.toString());
         Request request = new Request.Builder()
                 .url(url)
