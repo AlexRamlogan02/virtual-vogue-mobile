@@ -1,16 +1,14 @@
 package com.alexandra.virtual_vogue_mobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -37,20 +35,26 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class outfitCreationFragment extends Fragment {
 
-    public static class Clothes{
+    public static class Clothes {
 
         String label;
         URL imageUrl;
         int mapIndex;
         Bitmap image;
-        public Clothes(URL imageUrl, String label, int mapIndex) throws IOException {
+
+        String id;
+
+        public Clothes(URL imageUrl, String label, int mapIndex, String id) throws IOException {
             this.imageUrl = imageUrl;
+            this.id = id;
             this.label = label;
             this.mapIndex = mapIndex;
             image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
@@ -61,47 +65,50 @@ public class outfitCreationFragment extends Fragment {
 
     SharedPreferences sharedPreferences;
     OkHttpClient client;
-    String url, name;
+    String url, url2, name;
     ImageView imageView;
+    Map<String, String> params;
     String TAG = "createOutfits";
-    TextView text;
-    GridLayout displayGrid;
-    View gridRoot;
+    JSONObject parameter;
     int COL;
     int ROW;
-
     ViewGroup root;
-    LinearLayout linearLayout;
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View parentView =  inflater.inflate(R.layout.fragment_outfit_creation, container, false);
-        root = parentView.findViewById(R.id.frameForGrid);
-        linearLayout = (LinearLayout) parentView.findViewById(R.id.frameForGrid);
+        View parentView = inflater.inflate(R.layout.fragment_outfit_creation, container, false);
+        root = (LinearLayout) parentView.findViewById(R.id.frameForGrid);
 
+        params = new HashMap<String, String>();
         client = new OkHttpClient();
         imageView = parentView.findViewById(R.id.imageViewShirt);
+        //text = parentView.findViewById(R.id.blank);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/images/" + name;
+        url2 = "https://virtvogue-af76e325d3c9.herokuapp.com/api/DeletePhoto/" + name;
         Closet = new HashMap<Integer, Clothes>();
 
-        //fetchClothes();
-        fetchImages();
+        fetchClothes();
+
         return parentView;
     }
 
-    public void fetchClothes()
-    {
-        Request request = new Request.Builder().url(url).get().build();
+    public void fetchClothes() {
 
+        RequestBody body = RequestBody.create(JSON, name);
+        Request request = new Request.Builder().url(url).addHeader("Accept", "application/json")
+                .method("GET", null)
+                .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
+                Log.e(TAG, "onFailure: Failed", e);
             }
 
             @Override
@@ -109,70 +116,77 @@ public class outfitCreationFragment extends Fragment {
                 String json = response.body().string();
                 JSONObject jobj = null;
                 JSONObject imageObj = null;
-                String imageURL;
                 String label;
+                String id;
 
                 try {
                     jobj = new JSONObject(json);
-                    if (!jobj.getBoolean("success")){
+                    JSONArray jsonArray = jobj.getJSONArray("images");
 
+                    for (int i = 0; i < jsonArray.length() - 1; i++) {
+                        imageObj = jsonArray.getJSONObject(i);
+
+                        label = imageObj.getString("tag");
+                        id = imageObj.getString("publicId");
+                        URL clothesURL = new URL(imageObj.getString("url"));
+                        //add all to closet
+                        Clothes clothing = new Clothes(clothesURL, label, i, id);
+                        Closet.put(i, clothing);
+                        Log.d(TAG, "onResponse: " + Closet.get(i).label + i);
                     }
-                    else {
-                        JSONArray jsonArray = jobj.getJSONArray("images");
+                    Log.d(TAG, "onResponse: finish" + String.valueOf(call.isCanceled()));
 
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            imageObj = jsonArray.getJSONObject(i);
-                            label = imageObj.getString("tag");
-                            URL clothesURL = new URL(imageObj.getString("url"));
-                            Bitmap bitmap = BitmapFactory.decodeStream(clothesURL.openConnection().getInputStream());
-                            //add all to closet
-                            Clothes clothing = new Clothes(clothesURL, label, i);
-                            Closet.put(i, clothing);
-                            Log.d(TAG, "onResponse: " + Closet.get(i).label + i);
-
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG, "onCreateView: Finish fetch");
+                            try {
+                                Log.d(TAG, "onCreateView: Display Cothes" + Closet.size());
+                                displayClothes();
+                            } catch (Exception e) {
+                                Log.d(TAG, "onResponse: Didn't work :/");
+                                Log.e(TAG, "onResponse: ", e);
+                            }
                         }
-                        Log.d(TAG, "onCreateView: start display clothes" + Closet.size());
-                        displayClothes();
-                    }
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    });
+
+
+                } catch (Exception e) {
+                    Log.e(TAG, "onResponse: ", e);
                 }
             }
         });
 
-
+        Log.d(TAG, "onResponse: end");
     }
 
     public void displayClothes(){
         Log.d(TAG, "displayClothes: " + Closet.size());
         //initialize the grid layout
+        GridLayout grid = new GridLayout(getContext());
+        ViewGroup.LayoutParams gridViewparams= new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        grid.setLayoutParams(gridViewparams);
+        grid.setPadding(25, 0, 25, 25);
+        grid.setBackgroundColor(getResources().getColor(R.color.white));
         ROW = Closet.size();
         COL = 1;
-        displayGrid = new GridLayout(getActivity());
-        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        displayGrid.setLayoutParams(params);
-        displayGrid.setColumnCount(COL);
-        displayGrid.setRowCount(ROW);
-
+        grid.setRowCount(ROW);
+        grid.setColumnCount(COL);
 
         for (int i = 0; i < ROW; i++) {
-
             Clothes clothing = Closet.get(i);
-            Log.d(TAG, "displayClothes: " + clothing.label);
-
-            //create a child
-            LinearLayout cardView = new LinearLayout(getActivity());
-            cardView.setElevation(5);
-            cardView.setBackground(getResources().getDrawable(R.drawable.container_card));
-            ViewGroup.LayoutParams cardParams = new ViewGroup.LayoutParams(
+            LinearLayout linearLayout = new LinearLayout(getContext());
+            ViewGroup.LayoutParams linearParams= new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
-            cardView.setLayoutParams(cardParams);
+            linearLayout.setLayoutParams(linearParams);
+            linearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+            linearLayout.setBackground(getResources().getDrawable(R.drawable.edit_text_box));
 
-            Log.d(TAG, "displayClothes: set linear layout");
             //add the label, imageView, and delete button
             TextView label = new TextView(getActivity());
             ViewGroup.LayoutParams textParams = new ViewGroup.LayoutParams(
@@ -187,7 +201,7 @@ public class outfitCreationFragment extends Fragment {
             label.setTypeface(getResources().getFont(R.font.lemands));
             label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
             label.setGravity(Gravity.CENTER);
-            cardView.addView(label);
+            linearLayout.addView(label);
 
             Log.d(TAG, "displayClothes: set text" + clothing.label);
 
@@ -199,7 +213,7 @@ public class outfitCreationFragment extends Fragment {
             currentImage.setLayoutParams(imageParams);
             currentImage.setImageBitmap(clothing.image);
             currentImage.setForegroundGravity(Gravity.CENTER);
-            cardView.addView(currentImage);
+            linearLayout.addView(currentImage);
 
             Log.d(TAG, "displayClothes: add image");
 
@@ -216,28 +230,22 @@ public class outfitCreationFragment extends Fragment {
             deleteButton.setForegroundGravity(Gravity.CENTER);
             deleteButton.setPadding(10, 10 , 10 , 10);
             setDeleteButton(deleteButton, i);
-            cardView.addView(deleteButton);
+            linearLayout.addView(deleteButton);
 
             Log.d(TAG, "displayClothes: add button");
 
-            GridLayout.Spec rowSpan = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
-            GridLayout.Spec colSpan = GridLayout.spec(GridLayout.UNDEFINED, 1, 1);
 
-            GridLayout.LayoutParams gridParams = new GridLayout.LayoutParams(rowSpan, colSpan);
-            displayGrid.addView(cardView, gridParams);
-            Log.d(TAG, "displayClothes: Add Linear Layout");
+            GridLayout.Spec row = GridLayout.spec(i);
+            GridLayout.Spec col = GridLayout.spec(0);
+            GridLayout.LayoutParams innerParam = new GridLayout.LayoutParams(
+                    row, col
+            );
+
+            grid.addView(linearLayout, innerParam);
+            Log.d(TAG, "displayClothes: add to grid");
         }
 
-        Log.d(TAG, "displayClothes: Try to add to root");
-
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                root.addView(displayGrid);
-            }
-        });
-
-        Log.d(TAG, "displayClothes: finish");
+        root.addView(grid);
 
     }
 
@@ -245,105 +253,39 @@ public class outfitCreationFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                params.put("id", Closet.get(child).id);
+                parameter = new JSONObject(params);
+                deleteOutfit();
+                params.remove("id");
                 Log.d(TAG, "onClick: Delete child" + child);
             }
         });
 
     }
 
-    public void fetchImages(){
-        Request request = new Request.Builder().url(url).get().build();
+    public void deleteOutfit()
+    {
+        RequestBody body = RequestBody.create(JSON, parameter.toString());
+        Request request = new Request.Builder()
+                .url(url2)
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.d(TAG, "BRUUUUH");
                 e.printStackTrace();
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d(TAG, "BRUUUUH");
-                String json = response.body().string();
-                JSONObject jobj = null;
-
-                try {
-                    jobj = new JSONObject(json);
-
-                    if (!jobj.getBoolean("success")){
-
-                    }
-                    else {
-                        JSONArray jsonArray = jobj.getJSONArray("images");
-
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject image = jsonArray.getJSONObject(i);
-                            String imagesUrl = image.getString("url");
-                            String name = image.getString("tag");
-
-                            URL curl = new URL(imagesUrl);
-                            //URL pants = new URL(pantsUrl);
-                            Bitmap bmp = BitmapFactory.decodeStream(curl.openConnection().getInputStream());
-                            //Bitmap bmp2 = BitmapFactory.decodeStream(pants.openConnection().getInputStream());
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.lemands);
-                                    ImageView imgView = new ImageView(getActivity());
-                                    //ImageView imgView2 = new ImageView(getActivity());
-                                    TextView textView = new TextView(getContext());
-                                    LinearLayout innerLayout = new LinearLayout(getContext());
-                                    LinearLayout.LayoutParams linParams = new LinearLayout.LayoutParams(
-                                            ViewGroup.LayoutParams.MATCH_PARENT,
-                                            ViewGroup.LayoutParams.MATCH_PARENT);
-                                    linParams.setMargins(60, 25, 60, 25);
-                                    innerLayout.setLayoutParams(linParams);
-
-                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT
-                                    );
-                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(
-                                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT
-                                    );
-                                    innerLayout.setOrientation(LinearLayout.VERTICAL);
-                                    innerLayout.setGravity(Gravity.CENTER);
-
-                                    imgView.setLayoutParams(lp);
-                                    //imgView2.setLayoutParams(lp2);
-                                    //imgView.setPadding(25,15,25,15);
-                                    //imgView2.setPadding(50,15,50,15);
-                                    innerLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.container_card));
-
-                                    textView.setText(name);
-                                    textView.setTextColor(getResources().getColor(R.color.black));
-                                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-
-                                    textView.setTypeface(typeface);
-                                    textView.setGravity(Gravity.CENTER);
-
-                                    imgView.setImageBitmap(bmp);
-                                    //imgView2.setImageBitmap(bmp2);
-                                    innerLayout.addView(textView);
-                                    innerLayout.addView(imgView);
-                                    //innerLayout.addView(imgView2);
-                                    linearLayout.addView(innerLayout);
-                                }
-                            });
-                        }
-                    }
-
-                    //Glide.with(getActivity()).load(clothesUrl).into(imageView);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-
-
+                Intent intent = new Intent(getActivity(), landingPage.class);
+                startActivity(intent);
             }
         });
-
-
-
     }
+
+
 
 }
