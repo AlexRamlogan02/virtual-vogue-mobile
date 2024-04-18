@@ -47,8 +47,8 @@
                 android:textSize="40sp" />
 
             <ImageView
-                android:layout_width="200dp"
-                android:layout_height="250dp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
                 android:layout_margin="25dp"
                 android:id="@+id/imageViewShirt"
                 android:layout_gravity="center"
@@ -57,8 +57,8 @@
 
 
             <ImageView
-                android:layout_width="200dp"
-                android:layout_height="250dp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
                 android:layout_margin="25dp"
                 android:id="@+id/imageViewPants"
                 android:visibility="gone"
@@ -67,8 +67,8 @@
 
 
             <ImageView
-                android:layout_width="200dp"
-                android:layout_height="250dp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
                 android:layout_margin="25dp"
                 android:id="@+id/imageViewDress"
                 android:visibility="gone"

@@ -58,6 +58,39 @@ public class outfitCreationFragment extends Fragment {
         }
     }
 
+    public class Outfit{
+        String pantsID;
+        String shirtID;
+        String dressID;
+        public Outfit(){
+            pantsID = null;
+            shirtID = null;
+            dressID = null;
+        }
+
+        public void addShirt(String shirtID){
+            this.shirtID = shirtID;
+            if(dressID!=null){
+                dressID = null;
+            }
+        }
+
+        public void addPants(String pantsID){
+            this.pantsID = pantsID;
+            if(dressID!=null){
+                dressID = null;
+            }
+        }
+
+        public void addDress(String dressID){
+            this.dressID = dressID;
+            if(shirtID != null || pantsID != null){
+                shirtID = null;
+                pantsID = null;
+            }
+        }
+    }
+
     Map<Integer, Clothes> Closet;
 
     SharedPreferences sharedPreferences;
@@ -86,6 +119,7 @@ public class outfitCreationFragment extends Fragment {
         name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/images/" + name;
         Closet = new HashMap<Integer, Clothes>();
+        Outfit outfit = new Outfit();
 
         fetchClothes();
 
@@ -274,15 +308,11 @@ public class outfitCreationFragment extends Fragment {
             public void onClick(View v) {
                 ImageView img;
 
-                if (tag.equals("Shirt")) {
+                if(tag.equals("Shirt")) {
                     img = getActivity().findViewById(R.id.imageViewShirt);
-                    ImageView dress = getActivity().findViewById(R.id.imageViewDress);
-                    dress.setVisibility(View.GONE);
                 } else if (tag.equals("Pants")) {
                     img = getActivity().findViewById(R.id.imageViewPants);
-                    ImageView dress = getActivity().findViewById(R.id.imageViewDress);
-                    dress.setVisibility(View.GONE);
-                } else {
+                } else{
                     ImageView shirt = getActivity().findViewById(R.id.imageViewShirt);
                     ImageView pants = getActivity().findViewById(R.id.imageViewPants);
                     if(shirt.getDrawable() != null || pants.getDrawable() != null){
