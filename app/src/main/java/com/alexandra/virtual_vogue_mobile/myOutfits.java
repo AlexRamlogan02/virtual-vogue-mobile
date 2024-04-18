@@ -153,7 +153,7 @@ public class myOutfits extends Fragment {
                                     ImageView imgView = new ImageView(getActivity());
                                     ImageView imgView2 = new ImageView(getActivity());
                                     TextView textView = new TextView(getContext());
-                                    
+
                                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(650, 650);
                                     LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(650, 650);
                                     lp.setMargins(-225,0,0,0);
