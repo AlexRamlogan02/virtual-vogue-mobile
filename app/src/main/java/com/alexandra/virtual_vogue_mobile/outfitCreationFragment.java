@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -68,6 +71,7 @@ public class outfitCreationFragment extends Fragment {
     int ROW;
 
     ViewGroup root;
+    LinearLayout linearLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,16 +80,17 @@ public class outfitCreationFragment extends Fragment {
 
         View parentView =  inflater.inflate(R.layout.fragment_outfit_creation, container, false);
         root = parentView.findViewById(R.id.frameForGrid);
+        linearLayout = (LinearLayout) parentView.findViewById(R.id.frameForGrid);
 
         client = new OkHttpClient();
         imageView = parentView.findViewById(R.id.imageViewShirt);
-        //text = parentView.findViewById(R.id.blank);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/images/" + name;
         Closet = new HashMap<Integer, Clothes>();
 
-        fetchClothes();
+        //fetchClothes();
+        fetchImages();
         return parentView;
     }
 
@@ -243,6 +248,101 @@ public class outfitCreationFragment extends Fragment {
                 Log.d(TAG, "onClick: Delete child" + child);
             }
         });
+
+    }
+
+    public void fetchImages(){
+        Request request = new Request.Builder().url(url).get().build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d(TAG, "BRUUUUH");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d(TAG, "BRUUUUH");
+                String json = response.body().string();
+                JSONObject jobj = null;
+
+                try {
+                    jobj = new JSONObject(json);
+
+                    if (!jobj.getBoolean("success")){
+
+                    }
+                    else {
+                        JSONArray jsonArray = jobj.getJSONArray("images");
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject image = jsonArray.getJSONObject(i);
+                            String imagesUrl = image.getString("url");
+                            String name = image.getString("tag");
+
+                            URL curl = new URL(imagesUrl);
+                            //URL pants = new URL(pantsUrl);
+                            Bitmap bmp = BitmapFactory.decodeStream(curl.openConnection().getInputStream());
+                            //Bitmap bmp2 = BitmapFactory.decodeStream(pants.openConnection().getInputStream());
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.lemands);
+                                    ImageView imgView = new ImageView(getActivity());
+                                    //ImageView imgView2 = new ImageView(getActivity());
+                                    TextView textView = new TextView(getContext());
+                                    LinearLayout innerLayout = new LinearLayout(getContext());
+                                    LinearLayout.LayoutParams linParams = new LinearLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.MATCH_PARENT,
+                                            ViewGroup.LayoutParams.MATCH_PARENT);
+                                    linParams.setMargins(60, 25, 60, 25);
+                                    innerLayout.setLayoutParams(linParams);
+
+                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                                            ViewGroup.LayoutParams.WRAP_CONTENT
+                                    );
+                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                                            ViewGroup.LayoutParams.WRAP_CONTENT
+                                    );
+                                    innerLayout.setOrientation(LinearLayout.VERTICAL);
+                                    innerLayout.setGravity(Gravity.CENTER);
+
+                                    imgView.setLayoutParams(lp);
+                                    //imgView2.setLayoutParams(lp2);
+                                    //imgView.setPadding(25,15,25,15);
+                                    //imgView2.setPadding(50,15,50,15);
+                                    innerLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.container_card));
+
+                                    textView.setText(name);
+                                    textView.setTextColor(getResources().getColor(R.color.black));
+                                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+
+                                    textView.setTypeface(typeface);
+                                    textView.setGravity(Gravity.CENTER);
+
+                                    imgView.setImageBitmap(bmp);
+                                    //imgView2.setImageBitmap(bmp2);
+                                    innerLayout.addView(textView);
+                                    innerLayout.addView(imgView);
+                                    //innerLayout.addView(imgView2);
+                                    linearLayout.addView(innerLayout);
+                                }
+                            });
+                        }
+                    }
+
+                    //Glide.with(getActivity()).load(clothesUrl).into(imageView);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+            }
+        });
+
+
 
     }
 
