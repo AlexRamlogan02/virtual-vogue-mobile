@@ -101,6 +101,8 @@ public class outfitCreationFragment extends Fragment {
                     JSONArray jsonArray = jobj.getJSONArray("images");
 
                     for (int i = 0; i < jsonArray.length(); i++) {
+
+
                         imageObj = jsonArray.getJSONObject(i);
 
                         label = imageObj.getString("tag");
@@ -115,6 +117,7 @@ public class outfitCreationFragment extends Fragment {
                     for (int i = 0; i < Closet.size(); i++) {
                         Clothes clothing = Closet.get(i);
                         Log.d(TAG, "onResponse: " + clothing.label);
+
                     }
 
                 } catch (JSONException e){
