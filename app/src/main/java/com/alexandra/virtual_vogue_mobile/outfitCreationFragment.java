@@ -22,6 +22,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,7 +115,7 @@ public class outfitCreationFragment extends Fragment {
                     jobj = new JSONObject(json);
                     JSONArray jsonArray = jobj.getJSONArray("images");
 
-                    for (int i = 0; i < jsonArray.length() - 1; i++) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         imageObj = jsonArray.getJSONObject(i);
 
                         label = imageObj.getString("tag");
@@ -155,27 +156,41 @@ public class outfitCreationFragment extends Fragment {
         //initialize the grid layout
         GridLayout grid = new GridLayout(getContext());
         ViewGroup.LayoutParams gridViewparams= new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         grid.setLayoutParams(gridViewparams);
-        grid.setPadding(25, 0, 25, 25);
+        grid.setForegroundGravity(Gravity.CENTER);
         grid.setBackgroundColor(getResources().getColor(R.color.white));
-        ROW = Closet.size();
-        COL = 1;
+        grid.setPadding(6, 6, 6, 6);
+        ROW =  (Closet.size() / 3 ) + (Closet.size() % 3);
+        Log.d(TAG, "displayClothes: " + Closet.size() % 3);
+        COL = 3;
         grid.setRowCount(ROW);
         grid.setColumnCount(COL);
+        int curRow =0 ;
+        int curCol = 0;
 
-        for (int i = 0; i < ROW; i++) {
+        for (int i = 0; i < Closet.size(); i++) {
             Clothes clothing = Closet.get(i);
             LinearLayout linearLayout = new LinearLayout(getContext());
             ViewGroup.LayoutParams linearParams= new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
+
+            if (curCol == 3){
+                curCol = 0;
+                curRow++;
+            }
+
+
             linearLayout.setLayoutParams(linearParams);
-            linearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
-            linearLayout.setBackground(getResources().getDrawable(R.drawable.edit_text_box));
+            linearLayout.setGravity(Gravity.CENTER);
+            linearLayout.setForegroundGravity(Gravity.CENTER);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            linearLayout.setPadding(30, 30 , 30, 30);
+
 
             //add the label, imageView, and delete button
             TextView label = new TextView(getActivity());
@@ -198,11 +213,13 @@ public class outfitCreationFragment extends Fragment {
             //add the imageView
             ImageView currentImage = new ImageView(getActivity());
             ViewGroup.LayoutParams imageParams = new ViewGroup.LayoutParams(
-                    100, 200
+                    ViewGroup.LayoutParams.MATCH_PARENT, 500
             );
+
             currentImage.setLayoutParams(imageParams);
             currentImage.setImageBitmap(clothing.image);
             currentImage.setForegroundGravity(Gravity.CENTER);
+            setImageClick(currentImage, clothing, i);
             linearLayout.addView(currentImage);
 
             Log.d(TAG, "displayClothes: add image");
@@ -216,22 +233,24 @@ public class outfitCreationFragment extends Fragment {
             deleteButton.setLayoutParams(buttonParams);
             deleteButton.setText("Delete");
             deleteButton.setTextColor(getResources().getColor(R.color.white));
+            deleteButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
             deleteButton.setBackgroundColor(getResources().getColor(R.color.blush));
             deleteButton.setForegroundGravity(Gravity.CENTER);
-            deleteButton.setPadding(10, 10 , 10 , 10);
-            setDeleteButton(deleteButton, i);
+            deleteButton.setPadding(8, 2 , 8 , 2);
+            setDeleteButton(deleteButton, clothing);
             linearLayout.addView(deleteButton);
 
             Log.d(TAG, "displayClothes: add button");
 
 
-            GridLayout.Spec row = GridLayout.spec(i);
-            GridLayout.Spec col = GridLayout.spec(0);
+            GridLayout.Spec row = GridLayout.spec(curRow);
+            GridLayout.Spec col = GridLayout.spec(curCol,1);
             GridLayout.LayoutParams innerParam = new GridLayout.LayoutParams(
                     row, col
             );
 
             grid.addView(linearLayout, innerParam);
+            curCol++;
             Log.d(TAG, "displayClothes: add to grid");
         }
 
@@ -239,14 +258,45 @@ public class outfitCreationFragment extends Fragment {
 
     }
 
-    public void setDeleteButton(final Button button, int child){
+    public void setDeleteButton(final Button button, Clothes clothing){
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: Delete child" + child);
+                Log.d(TAG, "onClick: Delete");
             }
         });
+    }
 
+    public void setImageClick(final ImageView imageView,  Clothes clothing, int key){
+        String tag = clothing.label;
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView img;
+
+                if (tag.equals("Shirt")) {
+                    img = getActivity().findViewById(R.id.imageViewShirt);
+                    ImageView dress = getActivity().findViewById(R.id.imageViewDress);
+                    dress.setVisibility(View.GONE);
+                } else if (tag.equals("Pants")) {
+                    img = getActivity().findViewById(R.id.imageViewPants);
+                    ImageView dress = getActivity().findViewById(R.id.imageViewDress);
+                    dress.setVisibility(View.GONE);
+                } else {
+                    ImageView shirt = getActivity().findViewById(R.id.imageViewShirt);
+                    ImageView pants = getActivity().findViewById(R.id.imageViewPants);
+                    if(shirt.getDrawable() != null || pants.getDrawable() != null){
+                        shirt.setImageDrawable(null);
+                        pants.setImageDrawable(null);
+                    }
+                    img = getActivity().findViewById(R.id.imageViewDress);
+                    shirt.setVisibility(View.GONE);
+                    pants.setVisibility(View.GONE);
+                }
+                img.setVisibility(View.VISIBLE);
+                img.setImageBitmap(clothing.image);
+            }
+        });
     }
 
 }
