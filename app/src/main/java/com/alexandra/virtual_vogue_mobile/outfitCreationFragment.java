@@ -99,7 +99,8 @@ public class outfitCreationFragment extends Fragment {
     Outfit outfit;
     SharedPreferences sharedPreferences;
     OkHttpClient client;
-    String url, url2, name;
+    String url, url2, url3, name;
+    Button saveOutfitButton;
     ImageView imageView;
     Map<String, String> params;
     String TAG = "createOutfits";
@@ -118,6 +119,14 @@ public class outfitCreationFragment extends Fragment {
         View parentView = inflater.inflate(R.layout.fragment_outfit_creation, container, false);
         root = (LinearLayout) parentView.findViewById(R.id.frameForGrid);
 
+        saveOutfitButton = parentView.findViewById(R.id.saveOutfitButton);
+        saveOutfitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                params.put("id",)
+            }
+        });
+
         params = new HashMap<String, String>();
         client = new OkHttpClient();
         imageView = parentView.findViewById(R.id.imageViewShirt);
@@ -126,6 +135,7 @@ public class outfitCreationFragment extends Fragment {
         name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/images/" + name;
         url2 = "https://virtvogue-af76e325d3c9.herokuapp.com/api/DeletePhoto/" + name;
+        url3 = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
         Closet = new HashMap<Integer, Clothes>();
         outfit = new Outfit();
 
@@ -308,6 +318,11 @@ public class outfitCreationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: Delete");
+                params.put("id", clothing.id);
+                parameter = new JSONObject(params);
+
+                deleteOutfit();
+                params.remove("id");
             }
         });
     }
@@ -322,9 +337,11 @@ public class outfitCreationFragment extends Fragment {
 
                 if(tag.equals("Shirt")) {
                     img = getActivity().findViewById(R.id.imageViewShirt);
+                    outfit.addShirt(String.valueOf(clothing.imageUrl));
                     Log.d(TAG, "onClick: add shirt");
                 } else if (tag.equals("Pants")) {
                     img = getActivity().findViewById(R.id.imageViewPants);
+                    outfit.addPants(String.valueOf(clothing.imageUrl));
                     Log.d(TAG, "onClick: add Pants");
                 } else{
                     ImageView shirt = getActivity().findViewById(R.id.imageViewShirt);
@@ -334,6 +351,7 @@ public class outfitCreationFragment extends Fragment {
                         pants.setImageDrawable(null);
                     }
                     img = getActivity().findViewById(R.id.imageViewDress);
+                    outfit.addDress(String.valueOf(clothing.imageUrl));
                     shirt.setVisibility(View.GONE);
                     pants.setVisibility(View.GONE);
 
@@ -350,6 +368,31 @@ public class outfitCreationFragment extends Fragment {
         RequestBody body = RequestBody.create(JSON, parameter.toString());
         Request request = new Request.Builder()
                 .url(url2)
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Intent intent = new Intent(getActivity(), landingPage.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
+
+    public void createOutfit()
+    {
+        RequestBody body = RequestBody.create(JSON, parameter.toString());
+        Request request = new Request.Builder()
+                .url(url3)
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .build();
