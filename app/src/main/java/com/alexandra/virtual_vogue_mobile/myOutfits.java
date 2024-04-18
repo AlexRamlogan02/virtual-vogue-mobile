@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
@@ -15,6 +17,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -78,8 +81,8 @@ public class myOutfits extends Fragment {
         String name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
 
-        imageView = (ImageView) parentView.findViewById(R.id.imageView);
-        imageView2 = (ImageView) parentView.findViewById(R.id.imageView2);
+        //imageView = (ImageView) parentView.findViewById(R.id.imageView);
+        //imageView2 = (ImageView) parentView.findViewById(R.id.imageView2);
         fetchImages();
 
 
@@ -136,7 +139,7 @@ public class myOutfits extends Fragment {
                             JSONObject outfit = jsonArray.getJSONObject(i);
                             String clothesUrl = outfit.getString("shirtURL");
                             String pantsUrl = outfit.getString("pantsURL");
-
+                            String name = outfit.getString("outfitName");
 
                             URL curl = new URL(clothesUrl);
                             URL pants = new URL(pantsUrl);
@@ -146,15 +149,36 @@ public class myOutfits extends Fragment {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.lemands);
                                     ImageView imgView = new ImageView(getActivity());
-                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 250);
+                                    ImageView imgView2 = new ImageView(getActivity());
+                                    TextView textView = new TextView(getContext());
+
+                                    //LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    //LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(700, 700);
+                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(700, 700);
+                                    lp2.setMargins(0,0,0,250);
 
                                     imgView.setLayoutParams(lp);
-                                    imgView.setImageBitmap(bmp2);
-                                    linearLayout.addView(imgView);
+                                    imgView2.setLayoutParams(lp2);
+                                    imgView.setPadding(-25,15,-25,15);
+                                    imgView2.setPadding(-50,15,-50,-15);
+                                    imgView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.container_card));
+                                    imgView2.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.container_card));
 
-                                    imageView.setImageBitmap(bmp);
-                                    imageView2.setImageBitmap(bmp2);
+                                    linearLayout.addView(textView);
+                                    linearLayout.addView(imgView);
+                                    linearLayout.addView(imgView2);
+
+
+                                    textView.setText(name);
+                                    textView.setTextColor(getResources().getColor(R.color.black));
+                                    textView.setTextSize(50);
+                                    textView.setX(500);
+                                    textView.setTypeface(typeface);
+                                    imgView.setImageBitmap(bmp);
+                                    imgView2.setImageBitmap(bmp2);
                                 }
                             });
                         }
