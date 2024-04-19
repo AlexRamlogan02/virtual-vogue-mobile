@@ -99,54 +99,58 @@ public class loginFragment extends Fragment {
 
                     Log.d(TAG, "onResponse: json + " + json);
 
-                    user = jobj.getString("userId");
-                    String firstName = jobj.getString("firstName");
-                    String lastName = jobj.getString("lastName");
-                    String email = jobj.getString("email");
-                    String verified = jobj.getString("verified");
+                    if (!jobj.getBoolean("success")){
+                        return;
+                    }
+                    else {
 
-                    Log.d(TAG, "onResponse: results: " + firstName + "\n" + lastName + "\n"
-                            + email + "\n" + verified);
+                        user = jobj.getString("userId");
+                        String firstName = jobj.getString("firstName");
+                        String lastName = jobj.getString("lastName");
+                        String email = jobj.getString("email");
+                        String verified = jobj.getString("verified");
 
-                    if (user.startsWith("-1")) {
+                        Log.d(TAG, "onResponse: results: " + firstName + "\n" + lastName + "\n"
+                                + email + "\n" + verified);
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                text.setVisibility(View.VISIBLE);
-                                text.setText("Wrong Username/Password");
-                            }
-                        });
+                        if (user.startsWith("-1")) {
 
-                    } else {
-                        if (verified.matches("false"))
-                        {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     text.setVisibility(View.VISIBLE);
-                                    text.setText("User isn't verified");
+                                    text.setText("Wrong Username/Password");
                                 }
                             });
+
+                        } else {
+                            if (verified.matches("false")) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        text.setVisibility(View.VISIBLE);
+                                        text.setText("User isn't verified");
+                                    }
+                                });
+                            } else {
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                Log.d(TAG, "onResponse: " + user);
+
+                                //add values to sharedPreferences
+
+                                editor.putString("user", user);
+                                editor.putString("firstName", firstName);
+                                editor.putString("lastName", lastName);
+                                editor.putString("email", email);
+                                editor.putString("username", login);
+                                editor.putString("password", password);
+                                editor.putString("verified", verified);
+                                editor.commit();
+
+                                startActivity(new Intent(getActivity(), landingPage.class));
+                            }
+
                         }
-                        else {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            Log.d(TAG, "onResponse: " + user);
-
-                            //add values to sharedPreferences
-
-                            editor.putString("user", user);
-                            editor.putString("firstName", firstName);
-                            editor.putString("lastName", lastName);
-                            editor.putString("email", email);
-                            editor.putString("username", login);
-                            editor.putString("password", password);
-                            editor.putString("verified", verified);
-                            editor.commit();
-
-                            startActivity(new Intent(getActivity(), landingPage.class));
-                        }
-
                     }
 
                 } catch (JSONException e) {

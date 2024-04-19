@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -93,6 +94,18 @@ public class outfitCreationFragment extends Fragment {
                 pantsID = null;
             }
         }
+
+        public String getShirt(){
+            return shirtID;
+        }
+
+        public String getPants() {
+            return pantsID;
+        }
+
+        public String getDress() {
+            return dressID;
+        }
     }
 
     Map<Integer, Clothes> Closet;
@@ -105,6 +118,8 @@ public class outfitCreationFragment extends Fragment {
     Map<String, String> params;
     String TAG = "createOutfits";
     JSONObject parameter;
+    EditText outfitName;
+    String oName;
     int COL;
     int ROW;
     ViewGroup root;
@@ -120,12 +135,7 @@ public class outfitCreationFragment extends Fragment {
         root = (LinearLayout) parentView.findViewById(R.id.frameForGrid);
 
         saveOutfitButton = parentView.findViewById(R.id.saveOutfitButton);
-        saveOutfitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                params.put("id",)
-            }
-        });
+        outfitName = parentView.findViewById(R.id.outfitNameEditText);
 
         params = new HashMap<String, String>();
         client = new OkHttpClient();
@@ -138,6 +148,32 @@ public class outfitCreationFragment extends Fragment {
         url3 = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
         Closet = new HashMap<Integer, Clothes>();
         outfit = new Outfit();
+
+        saveOutfitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                oName = String.valueOf(outfitName.getText());
+
+                params.put("outfitName", oName);
+                if(outfit.shirtID != null && outfit.pantsID != null) {
+                    params.put("shirtURL", outfit.getShirt());
+                    params.put("shirtTag", "Shirt");
+                    params.put("pantsURL", outfit.getPants());
+                    params.put("pantsTag", "Pants");
+                }
+                else if(outfit.shirtID != null || outfit.pantsID != null)
+                    Toast.makeText(getActivity(), "Missing clothing!" , Toast.LENGTH_SHORT).show();
+                else{
+                    params.put("dressURL", outfit.getDress());
+                    params.put("dressTag", "Dress");
+                }
+
+                parameter = new JSONObject(params);
+                createOutfit();
+                params = new HashMap<String, String>(); //new params
+
+            }
+        });
 
         fetchClothes();
 
@@ -167,12 +203,12 @@ public class outfitCreationFragment extends Fragment {
                 try {
                     jobj = new JSONObject(json);
                     if (!jobj.getBoolean("success")){
-
+                        //do stuff
                     }
                     else {
                         JSONArray jsonArray = jobj.getJSONArray("images");
 
-                        for (int i = 0; i < jsonArray.length() - 1; i++) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             imageObj = jsonArray.getJSONObject(i);
 
                             label = imageObj.getString("tag");
