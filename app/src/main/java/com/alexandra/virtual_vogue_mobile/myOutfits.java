@@ -11,8 +11,10 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -45,9 +47,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -58,16 +63,26 @@ import okhttp3.Response;
  * status bar and navigation/system bar) with user interaction.
  */
 public class myOutfits extends Fragment {
+
+    public static class Outfits{
+        String name;
+        public Outfits(String name){
+            this.name = name;
+        }
+    }
     String TAG = "myOutfits";
     OkHttpClient client;
     TextView text;
     FloatingActionButton floatingActionButton;
     //camera
     Intent intent;
-    String url;
+    String url, url2;
     SharedPreferences sharedPreferences;
     ImageView imageView, imageView2;
     LinearLayout linearLayout;
+    Map<String, String> params;
+    Map<String, Outfits> allOutfits;
+    String name;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -75,13 +90,14 @@ public class myOutfits extends Fragment {
         Log.d(TAG, "onCreateView: Create SignUp Fragment");
 
         View parentView =  inflater.inflate(R.layout.fragment_my_outfits, container, false);
-
+        params = new HashMap<String, String>();
+        allOutfits = new HashMap<String, Outfits>();
         client = new OkHttpClient();
         text = parentView.findViewById(R.id.outfitsTitleS);
         text.setVisibility(View.GONE);
         linearLayout = (LinearLayout) parentView.findViewById(R.id.imagesLayout);
         sharedPreferences = this.getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
-        String name = sharedPreferences.getString("user", null);
+        name = sharedPreferences.getString("user", null);
         url = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name;
 
         //imageView = (ImageView) parentView.findViewById(R.id.imageView);
@@ -142,6 +158,8 @@ public class myOutfits extends Fragment {
                             String clothesUrl = outfit.getString("shirtURL");
                             String pantsUrl = outfit.getString("pantsURL");
                             String name = outfit.getString("outfitName");
+                            Outfits fit = new Outfits(name);
+                            allOutfits.put(name, fit);
 
                             URL curl = new URL(clothesUrl);
                             URL pants = new URL(pantsUrl);
@@ -161,7 +179,7 @@ public class myOutfits extends Fragment {
                                             ViewGroup.LayoutParams.MATCH_PARENT);
                                     linParams.setMargins(45, 25, 45, 25);
                                     innerLayout.setLayoutParams(linParams);
-                                    
+
                                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                                             ViewGroup.LayoutParams.WRAP_CONTENT,
                                             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -192,6 +210,8 @@ public class myOutfits extends Fragment {
                                     innerLayout.addView(imgView);
                                     innerLayout.addView(imgView2);
                                     linearLayout.addView(innerLayout);
+                                    setOutfitDelete(innerLayout, name);
+
                                 }
                             });
                         }
@@ -207,6 +227,88 @@ public class myOutfits extends Fragment {
         });
 
 
+
+    }
+
+    public void setOutfitDelete(LinearLayout innerLayout, String key){
+
+        innerLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Outfits currentOutfit = allOutfits.get(key);
+                confirmDelete(currentOutfit.name);
+            }
+        });
+    }
+
+    private void confirmDelete(String outfitName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Do you want to delete this outfit?");
+        builder.setTitle("Confirm Account Deletion");
+        url2 = "https://virtvogue-af76e325d3c9.herokuapp.com/api/Outfits/" + name + "/" + outfitName;
+
+        Log.d(TAG, "confirmDelete: Settings Buttons");
+        //positive button
+        builder.setPositiveButton("Yes, delete this outfit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Log.d(TAG, "onClick: Continue Cancellation");
+                //make parameters
+                params = new HashMap<String, String>();
+                params.put("outfitName",outfitName);
+                params.put("userId", name);
+
+                JSONObject parameter = new JSONObject(params);
+
+                Log.d(TAG, "onClick: Start Delete");
+                //call delete
+                deleteOutfit();
+                //return to main
+                Intent intent = new Intent(getActivity(), landingPage.class);
+                //make a toast that the account was deleted
+                startActivity(intent);
+            }
+        });
+
+
+        //negative
+        builder.setNegativeButton("No, keep my outfit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //cancel
+            }
+        });
+
+        Log.d(TAG, "confirmDelete: Showing Dialog");
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        Log.d(TAG, "confirmDelete: dialog showed");
+    }
+
+    public void deleteOutfit(){
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        JSONObject parameter = new JSONObject(params);
+        RequestBody body = RequestBody.create(JSON, parameter.toString());
+        Request request = new Request.Builder()
+                .url(url2)
+                .delete(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Intent intent = new Intent(getActivity(), landingPage.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

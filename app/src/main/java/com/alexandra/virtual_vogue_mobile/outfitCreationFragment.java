@@ -202,8 +202,10 @@ public class outfitCreationFragment extends Fragment {
 
                 try {
                     jobj = new JSONObject(json);
-                    if (!jobj.getBoolean("success")){
-                        //do stuff
+                    boolean success = jobj.getBoolean("success");
+                    if (!success){
+                        Log.d(TAG, "onResponse: Error loading clothing");
+                        return;
                     }
                     else {
                         JSONArray jsonArray = jobj.getJSONArray("images");
