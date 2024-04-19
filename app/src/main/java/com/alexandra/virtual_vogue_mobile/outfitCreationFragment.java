@@ -441,8 +441,27 @@ public class outfitCreationFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Intent intent = new Intent(getActivity(), landingPage.class);
-                startActivity(intent);
+                String json = response.body().string();
+
+                Log.d(TAG, "onResponse: " + json);
+
+                try {
+                    JSONObject object = new JSONObject(json);
+                    boolean success = object.getBoolean("success");
+                    String message = object.getString("message");
+
+                    if(!success) {
+                        Log.d(TAG, "onResponse: Error saving image");
+                        return;
+                    }
+                    else{
+                        Intent intent = new Intent(getActivity(), landingPage.class);
+                        startActivity(intent);
+                    }
+                }catch (JSONException e){
+                    Log.e(TAG, "onResponse: ", e);
+                }
+
             }
         });
     }

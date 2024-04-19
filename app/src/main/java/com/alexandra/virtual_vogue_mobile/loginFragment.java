@@ -99,7 +99,7 @@ public class loginFragment extends Fragment {
 
                     Log.d(TAG, "onResponse: json + " + json);
 
-                    if (!jobj.getBoolean("success")){
+                    if (!jobj.getString("error").isEmpty()){
                         return;
                     }
                     else {
